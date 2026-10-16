@@ -20,6 +20,7 @@ import {
   SubjectEvaluationLevel,
 } from '../../types';
 import { soundManager } from '../../utils/audio';
+import { copyText } from '../../utils/clipboard';
 import { TT27_COMMENT_TEMPLATES, getTodayDateStr } from '../../utils/storage';
 
 interface Circular27CommentsViewProps {
@@ -92,7 +93,7 @@ export const Circular27CommentsView: React.FC<Circular27CommentsViewProps> = ({
 
   const copyComment = (comment: DailyComment, studentName: string) => {
     const full = `[${comment.date}] Em ${studentName} - ${comment.subject || ''} (Mức ${comment.level}): ${comment.content} ${comment.encouragement ? `Lời cô: ${comment.encouragement}` : ''}`;
-    navigator.clipboard.writeText(full);
+    copyText(full);
     setCopiedId(comment.id);
     soundManager.playTick();
     setTimeout(() => setCopiedId(null), 2000);

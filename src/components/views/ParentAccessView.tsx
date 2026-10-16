@@ -4,6 +4,7 @@ import { Check, Copy, ExternalLink, Eye, KeyRound, QrCode, UserCheck } from 'luc
 import { AppSettings, Student } from '../../types';
 import { parentInviteMessage, parentPortalUrl } from '../../utils/api';
 import { soundManager } from '../../utils/audio';
+import { copyText } from '../../utils/clipboard';
 
 interface ParentAccessViewProps {
   students: Student[];
@@ -19,7 +20,7 @@ export const ParentAccessView: React.FC<ParentAccessViewProps> = ({ students, se
   const link = settings.classCode ? parentPortalUrl(settings.classCode) : '';
 
   const copy = (id: string, text: string) => {
-    navigator.clipboard.writeText(text);
+    copyText(text);
     setCopiedId(id);
     soundManager.playTick();
     setTimeout(() => setCopiedId((current) => (current === id ? null : current)), 2500);

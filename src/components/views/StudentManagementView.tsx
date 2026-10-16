@@ -18,6 +18,7 @@ import {
 import { AppSettings, Student } from '../../types';
 import { parentInviteMessage } from '../../utils/api';
 import { soundManager } from '../../utils/audio';
+import { copyText } from '../../utils/clipboard';
 import {
   AVATAR_OPTIONS,
   exportStudentsToExcel,
@@ -214,7 +215,7 @@ export const StudentManagementView: React.FC<StudentManagementViewProps> = ({
 
   // Copy Parent Credentials to clipboard for Zalo sending
   const copyCredentials = (student: Student) => {
-    navigator.clipboard.writeText(parentInviteMessage(student, settings));
+    copyText(parentInviteMessage(student, settings));
     setCopiedId(student.id);
     soundManager.playTick();
     setTimeout(() => setCopiedId(null), 2500);
