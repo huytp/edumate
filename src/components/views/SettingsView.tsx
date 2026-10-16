@@ -497,7 +497,7 @@ export const SettingsView: React.FC<SettingsViewProps> = ({
                 5. Đóng Gói & Tải Mã Nguồn Ứng Dụng (.ZIP)
               </h3>
               <p className="text-xs text-slate-500">
-                Toàn bộ code nguồn hoàn chỉnh (React, TypeScript, Tailwind CSS, Web Speech API) để chạy offline hoặc cài lên máy tính/trường học.
+                Toàn bộ mã nguồn của phiên bản đang chạy: giao diện React + TypeScript, máy chủ Ruby on Rails, cơ sở dữ liệu MySQL và cấu hình Docker để cài lên máy chủ của trường.
               </p>
             </div>
           </div>
@@ -532,11 +532,11 @@ export const SettingsView: React.FC<SettingsViewProps> = ({
               <span>Hướng dẫn chạy sau khi tải về</span>
             </div>
             <div className="text-[11px] font-mono bg-slate-900 text-emerald-400 p-2.5 rounded-lg space-y-1">
-              <div># 1. Giải nén file edumate-source-code.zip</div>
-              <div># 2. Mở thư mục và cài đặt:</div>
-              <div className="text-white font-bold">npm install</div>
-              <div># 3. Khởi động ứng dụng:</div>
-              <div className="text-white font-bold">npm run dev</div>
+              <div># 1. Cài Docker Desktop, giải nén file zip</div>
+              <div># 2. Mở thư mục edumate-app và chạy:</div>
+              <div className="text-white font-bold">docker compose up -d --build</div>
+              <div># 3. Mở http://localhost:3000</div>
+              <div># Tài khoản demo: giaovien@edumate.local / 123456</div>
             </div>
           </div>
         </div>

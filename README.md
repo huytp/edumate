@@ -35,26 +35,13 @@
 
 ## 🚀 Hướng Dẫn Cài Đặt & Chạy Ứng Dụng Trên Máy Tính
 
-### Yêu Cầu Hệ Thống:
-- Đã cài đặt **Node.js** (Khuyến nghị phiên bản 18 hoặc 20 trở lên). Tải tại: [https://nodejs.org](https://nodejs.org)
+Ứng dụng gồm giao diện React, máy chủ Ruby on Rails và cơ sở dữ liệu MySQL, tất cả chạy bằng Docker.
 
-### Các Bước Thực Hiện:
+1. Cài **Docker Desktop**: [https://www.docker.com/products/docker-desktop](https://www.docker.com/products/docker-desktop)
+2. Giải nén mã nguồn (hoặc `git clone`), mở Terminal tại thư mục dự án và chạy `docker compose up -d --build`
+3. Mở trình duyệt tại **http://localhost:3000** và đăng nhập bằng tài khoản demo bên dưới (hoặc tự đăng ký)
 
-```bash
-# 1. Giải nén file ZIP vừa tải về:
-# Bạn nhấp chuột phải vào file edumate-source-code.zip -> chọn Extract All (Giải nén)
-
-# 2. Mở cửa sổ dòng lệnh (Terminal / Command Prompt / PowerShell) tại thư mục vừa giải nén:
-
-# 3. Cài đặt các thư viện phụ thuộc:
-npm install
-
-# 4. Khởi động ứng dụng ở chế độ phát triển:
-npm run dev
-
-# 5. Mở trình duyệt web (Chrome, Edge, Cốc Cốc, Safari) và truy cập địa chỉ:
-# http://localhost:3000
-```
+Gói mã nguồn `.zip` (nút "Tải mã nguồn" trong ứng dụng) được tạo tự động khi build bản production. Muốn tạo ở máy mình thì chạy `npm run package:zip`.
 
 ---
 

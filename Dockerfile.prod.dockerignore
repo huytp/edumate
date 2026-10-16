@@ -1,8 +1,13 @@
-# Used instead of .dockerignore for Dockerfile.prod; keeps public/*.zip for the download buttons.
+# Used instead of .dockerignore for Dockerfile.prod. The backend is included so the
+# source download contains it; secrets and generated files never enter the build.
 node_modules
 dist
-backend
 .git
 .env*
-/edumate-source-code.zip
+!.env.example
+!.env.production.example
+*.zip
+backend/log
+backend/tmp
+backend/config/master.key
 .DS_Store
