@@ -1,0 +1,6 @@
+{
+  "name": "EduMate – Người bạn đồng hành của giáo viên",
+  "description": "Ứng dụng quản lý lớp học, tạo trò chơi tương tác, đánh giá theo Thông tư 27 và kết nối 2 chiều giữa giáo viên và phụ huynh.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}

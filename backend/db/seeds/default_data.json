@@ -1,0 +1,1423 @@
+{
+  "settings": {
+    "schoolName": "Trường Tiểu học Chu Văn An",
+    "className": "Lớp 1A1",
+    "schoolYear": "2025 - 2026",
+    "teacherName": "Cô Nguyễn Thị Mai Phương",
+    "teacherPhone": "0988 123 456",
+    "teacherEmail": "maiphuong.teacher@gmail.com",
+    "appTitle": "EduMate – Người bạn đồng hành của giáo viên",
+    "appLogo": "🎒",
+    "soundEffectsEnabled": true,
+    "speechEnabled": true,
+    "speechVoice": "vi",
+    "speechRate": 0.7,
+    "speechPitch": 1.3,
+    "preferredVoiceURI": ""
+  },
+  "students": [
+    {
+      "id": "hs-1",
+      "code": "HS001",
+      "name": "Nguyễn Bảo Nam",
+      "dob": "2019-03-15",
+      "gender": "Nam",
+      "avatar": "👦🏻",
+      "parentName": "Nguyễn Văn Hùng",
+      "parentPhone": "0912 345 678",
+      "password": "123",
+      "points": 48,
+      "stars": 12,
+      "gameParticipationCount": 8,
+      "notes": "Ban cán sự lớp, rất nhiệt tình"
+    },
+    {
+      "id": "hs-2",
+      "code": "HS002",
+      "name": "Trần Hà Linh",
+      "dob": "2019-06-20",
+      "gender": "Nữ",
+      "avatar": "👧🏻",
+      "parentName": "Trần Thị Thảo",
+      "parentPhone": "0903 456 789",
+      "password": "123",
+      "points": 52,
+      "stars": 14,
+      "gameParticipationCount": 11,
+      "notes": "Chữ viết đẹp, cẩn thận"
+    },
+    {
+      "id": "hs-3",
+      "code": "HS003",
+      "name": "Lê Minh Khang",
+      "dob": "2019-01-10",
+      "gender": "Nam",
+      "avatar": "🦁",
+      "parentName": "Lê Tuấn Anh",
+      "parentPhone": "0987 654 321",
+      "password": "123",
+      "points": 35,
+      "stars": 9,
+      "gameParticipationCount": 6,
+      "notes": "Toán tốt, cần chú ý chính tả"
+    },
+    {
+      "id": "hs-4",
+      "code": "HS004",
+      "name": "Hoàng Thảo Vy",
+      "dob": "2019-09-05",
+      "gender": "Nữ",
+      "avatar": "🐰",
+      "parentName": "Hoàng Minh Long",
+      "parentPhone": "0934 567 890",
+      "password": "123",
+      "points": 45,
+      "stars": 11,
+      "gameParticipationCount": 9,
+      "notes": "Múa hát hay, hoà đồng"
+    },
+    {
+      "id": "hs-5",
+      "code": "HS005",
+      "name": "Phạm Đức Anh",
+      "dob": "2019-11-28",
+      "gender": "Nam",
+      "avatar": "🚀",
+      "parentName": "Phạm Văn Thành",
+      "parentPhone": "0978 112 233",
+      "password": "123",
+      "points": 29,
+      "stars": 7,
+      "gameParticipationCount": 5,
+      "notes": "Thỉnh thoảng nói chuyện riêng"
+    },
+    {
+      "id": "hs-6",
+      "code": "HS006",
+      "name": "Vũ Ngọc Hân",
+      "dob": "2019-04-12",
+      "gender": "Nữ",
+      "avatar": "🦄",
+      "parentName": "Đặng Bích Ngọc",
+      "parentPhone": "0918 223 344",
+      "password": "123",
+      "points": 40,
+      "stars": 10,
+      "gameParticipationCount": 7,
+      "notes": "Tập trung nghe giảng, ngoan"
+    },
+    {
+      "id": "hs-7",
+      "code": "HS007",
+      "name": "Đặng Tuấn Kiệt",
+      "dob": "2019-08-18",
+      "gender": "Nam",
+      "avatar": "🐼",
+      "parentName": "Đặng Quốc Huy",
+      "parentPhone": "0966 778 899",
+      "password": "123",
+      "points": 38,
+      "stars": 9,
+      "gameParticipationCount": 8,
+      "notes": "Ham học hỏi, thích chơi đố vui"
+    },
+    {
+      "id": "hs-8",
+      "code": "HS008",
+      "name": "Bùi Mai Anh",
+      "dob": "2019-12-02",
+      "gender": "Nữ",
+      "avatar": "👧🏼",
+      "parentName": "Bùi Văn Tiến",
+      "parentPhone": "0945 667 788",
+      "password": "123",
+      "points": 47,
+      "stars": 13,
+      "gameParticipationCount": 10,
+      "notes": "Tiếng Anh nói chuẩn, tự tin"
+    },
+    {
+      "id": "hs-9",
+      "code": "HS009",
+      "name": "Đỗ Gia Huy",
+      "dob": "2019-05-14",
+      "gender": "Nam",
+      "avatar": "🐯",
+      "parentName": "Đỗ Hữu Thắng",
+      "parentPhone": "0933 221 100",
+      "password": "123",
+      "points": 32,
+      "stars": 8,
+      "gameParticipationCount": 6,
+      "notes": "Thực hành thủ công khéo tay"
+    },
+    {
+      "id": "hs-10",
+      "code": "HS010",
+      "name": "Ngô Khánh Linh",
+      "dob": "2019-07-22",
+      "gender": "Nữ",
+      "avatar": "🎨",
+      "parentName": "Ngô Thanh Sơn",
+      "parentPhone": "0909 888 777",
+      "password": "123",
+      "points": 44,
+      "stars": 11,
+      "gameParticipationCount": 9,
+      "notes": "Vẽ tranh đẹp, màu sắc hài hoà"
+    },
+    {
+      "id": "hs-11",
+      "code": "HS011",
+      "name": "Dương Phúc An",
+      "dob": "2019-02-28",
+      "gender": "Nam",
+      "avatar": "🐨",
+      "parentName": "Dương Văn Bình",
+      "parentPhone": "0913 554 433",
+      "password": "123",
+      "points": 36,
+      "stars": 9,
+      "gameParticipationCount": 7,
+      "notes": "Tự giác hoàn thành bài tập"
+    },
+    {
+      "id": "hs-12",
+      "code": "HS012",
+      "name": "Trịnh Bảo Trân",
+      "dob": "2019-10-10",
+      "gender": "Nữ",
+      "avatar": "⭐",
+      "parentName": "Trịnh Đình Quang",
+      "parentPhone": "0977 443 322",
+      "password": "123",
+      "points": 50,
+      "stars": 13,
+      "gameParticipationCount": 12,
+      "notes": "Đọc diễn cảm tốt, rõ ràng"
+    }
+  ],
+  "attendance": [
+    {
+      "id": "att-{{TODAY}}-hs-1",
+      "date": "{{TODAY}}",
+      "studentId": "hs-1",
+      "status": "present"
+    },
+    {
+      "id": "att-{{TODAY}}-hs-2",
+      "date": "{{TODAY}}",
+      "studentId": "hs-2",
+      "status": "present"
+    },
+    {
+      "id": "att-{{TODAY}}-hs-3",
+      "date": "{{TODAY}}",
+      "studentId": "hs-3",
+      "status": "present"
+    },
+    {
+      "id": "att-{{TODAY}}-hs-4",
+      "date": "{{TODAY}}",
+      "studentId": "hs-4",
+      "status": "present"
+    },
+    {
+      "id": "att-{{TODAY}}-hs-5",
+      "date": "{{TODAY}}",
+      "studentId": "hs-5",
+      "status": "late",
+      "note": "Tắc đường đến muộn 10 phút"
+    },
+    {
+      "id": "att-{{TODAY}}-hs-6",
+      "date": "{{TODAY}}",
+      "studentId": "hs-6",
+      "status": "present"
+    },
+    {
+      "id": "att-{{TODAY}}-hs-7",
+      "date": "{{TODAY}}",
+      "studentId": "hs-7",
+      "status": "present"
+    },
+    {
+      "id": "att-{{TODAY}}-hs-8",
+      "date": "{{TODAY}}",
+      "studentId": "hs-8",
+      "status": "present"
+    },
+    {
+      "id": "att-{{TODAY}}-hs-9",
+      "date": "{{TODAY}}",
+      "studentId": "hs-9",
+      "status": "excused",
+      "note": "Nghỉ ốm có đơn"
+    },
+    {
+      "id": "att-{{TODAY}}-hs-10",
+      "date": "{{TODAY}}",
+      "studentId": "hs-10",
+      "status": "present"
+    },
+    {
+      "id": "att-{{TODAY}}-hs-11",
+      "date": "{{TODAY}}",
+      "studentId": "hs-11",
+      "status": "present"
+    },
+    {
+      "id": "att-{{TODAY}}-hs-12",
+      "date": "{{TODAY}}",
+      "studentId": "hs-12",
+      "status": "present"
+    }
+  ],
+  "pointsHistory": [],
+  "rewards": [
+    {
+      "id": "rw-1",
+      "name": "Phiếu miễn 1 lần bài tập về nhà",
+      "pointsCost": 25,
+      "icon": "🎟️",
+      "stock": 20,
+      "description": "Được miễn 1 bài tập viết hoặc toán về nhà tự chọn."
+    },
+    {
+      "id": "rw-2",
+      "name": "Bút chì khúc ngộ nghĩnh & Gôm tẩy",
+      "pointsCost": 15,
+      "icon": "✏️",
+      "stock": 35,
+      "description": "Bút chì nhiều màu sắc cùng gôm hình thú dễ thương."
+    },
+    {
+      "id": "rw-3",
+      "name": "Thước kẻ hoạt hình + Bộ nhãn vở",
+      "pointsCost": 10,
+      "icon": "📏",
+      "stock": 50,
+      "description": "Thước kẻ dẻo và bộ 5 nhãn vở in hình nhân vật yêu thích."
+    },
+    {
+      "id": "rw-4",
+      "name": "Huy hiệu \"Ngôi sao chăm ngoan\"",
+      "pointsCost": 20,
+      "icon": "🎖️",
+      "stock": 15,
+      "description": "Huy hiệu cài áo danh dự được cô giáo đeo trước cả lớp."
+    },
+    {
+      "id": "rw-5",
+      "name": "Quyền làm Quản trò 1 ngày",
+      "pointsCost": 30,
+      "icon": "👑",
+      "stock": 10,
+      "description": "Được đứng lên cùng cô bấm vòng quay và điều hành trò chơi."
+    },
+    {
+      "id": "rw-6",
+      "name": "Sách truyện tranh song ngữ",
+      "pointsCost": 40,
+      "icon": "📖",
+      "stock": 8,
+      "description": "Truyện tranh ngụ ngôn tiếng Việt - Anh kích thích đọc sách."
+    }
+  ],
+  "redemptions": [],
+  "comments": [
+    {
+      "id": "cm-1",
+      "studentId": "hs-1",
+      "date": "{{TODAY}}",
+      "category": "mon_hoc",
+      "subject": "Toán",
+      "level": "T",
+      "content": "Nắm chắc kiến thức, tính toán nhanh và chính xác. Tích cực chia sẻ cách giải hay trước lớp.",
+      "encouragement": "Tiếp tục phát huy tư duy logic và tìm thêm cách giải sáng tạo."
+    },
+    {
+      "id": "cm-2",
+      "studentId": "hs-2",
+      "date": "{{TODAY}}",
+      "category": "mon_hoc",
+      "subject": "Tiếng Việt",
+      "level": "T",
+      "content": "Đọc to, rõ ràng, ngắt nghỉ đúng dấu câu. Chữ viết đều nét, trình bày vở sạch đẹp.",
+      "encouragement": "Khen ngợi em, khuyến khích em đọc thêm nhiều câu chuyện hay."
+    },
+    {
+      "id": "cm-3",
+      "studentId": "hs-3",
+      "date": "{{TODAY}}",
+      "category": "pham_chat",
+      "subject": "Chăm chỉ",
+      "level": "Đ",
+      "content": "Biết vâng lời thầy cô, thực hiện đúng nội quy trường lớp và giữ gìn vệ sinh chung.",
+      "encouragement": "Cần năng nổ hơn khi tham gia các hoạt động tập thể."
+    }
+  ],
+  "semesterResults": [
+    {
+      "id": "sr-hs-1",
+      "studentId": "hs-1",
+      "schoolYear": "2025 - 2026",
+      "semester": "Học kỳ 1",
+      "mathScore": 10,
+      "mathLevel": "T",
+      "vietnameseScore": 9,
+      "vietnameseLevel": "T",
+      "englishScore": 9,
+      "englishLevel": "T",
+      "scienceLevel": "T",
+      "historyGeoLevel": "T",
+      "ethicsLevel": "T",
+      "musicLevel": "T",
+      "artLevel": "T",
+      "peLevel": "T",
+      "selfAutonomy": "T",
+      "communication": "T",
+      "problemSolving": "T",
+      "patriotism": "T",
+      "compassion": "T",
+      "diligence": "T",
+      "honesty": "T",
+      "responsibility": "T",
+      "awardTitle": "Học sinh Xuất sắc",
+      "overallComment": "Em chăm ngoan, lễ phép, hoàn thành xuất sắc các nội dung học tập và rèn luyện."
+    },
+    {
+      "id": "sr-hs-2",
+      "studentId": "hs-2",
+      "schoolYear": "2025 - 2026",
+      "semester": "Học kỳ 1",
+      "mathScore": 10,
+      "mathLevel": "T",
+      "vietnameseScore": 10,
+      "vietnameseLevel": "T",
+      "englishScore": 9,
+      "englishLevel": "T",
+      "scienceLevel": "T",
+      "historyGeoLevel": "T",
+      "ethicsLevel": "T",
+      "musicLevel": "T",
+      "artLevel": "T",
+      "peLevel": "T",
+      "selfAutonomy": "T",
+      "communication": "T",
+      "problemSolving": "T",
+      "patriotism": "T",
+      "compassion": "T",
+      "diligence": "T",
+      "honesty": "T",
+      "responsibility": "T",
+      "awardTitle": "Học sinh Xuất sắc",
+      "overallComment": "Em chăm ngoan, lễ phép, hoàn thành xuất sắc các nội dung học tập và rèn luyện."
+    },
+    {
+      "id": "sr-hs-3",
+      "studentId": "hs-3",
+      "schoolYear": "2025 - 2026",
+      "semester": "Học kỳ 1",
+      "mathScore": 10,
+      "mathLevel": "T",
+      "vietnameseScore": 9,
+      "vietnameseLevel": "T",
+      "englishScore": 9,
+      "englishLevel": "T",
+      "scienceLevel": "T",
+      "historyGeoLevel": "T",
+      "ethicsLevel": "T",
+      "musicLevel": "T",
+      "artLevel": "T",
+      "peLevel": "T",
+      "selfAutonomy": "T",
+      "communication": "T",
+      "problemSolving": "T",
+      "patriotism": "T",
+      "compassion": "T",
+      "diligence": "T",
+      "honesty": "T",
+      "responsibility": "T",
+      "awardTitle": "Học sinh Xuất sắc",
+      "overallComment": "Em chăm ngoan, lễ phép, hoàn thành xuất sắc các nội dung học tập và rèn luyện."
+    },
+    {
+      "id": "sr-hs-4",
+      "studentId": "hs-4",
+      "schoolYear": "2025 - 2026",
+      "semester": "Học kỳ 1",
+      "mathScore": 10,
+      "mathLevel": "T",
+      "vietnameseScore": 9,
+      "vietnameseLevel": "T",
+      "englishScore": 9,
+      "englishLevel": "T",
+      "scienceLevel": "T",
+      "historyGeoLevel": "T",
+      "ethicsLevel": "T",
+      "musicLevel": "T",
+      "artLevel": "T",
+      "peLevel": "T",
+      "selfAutonomy": "T",
+      "communication": "T",
+      "problemSolving": "T",
+      "patriotism": "T",
+      "compassion": "T",
+      "diligence": "T",
+      "honesty": "T",
+      "responsibility": "T",
+      "awardTitle": "Học sinh Xuất sắc",
+      "overallComment": "Em chăm ngoan, lễ phép, hoàn thành xuất sắc các nội dung học tập và rèn luyện."
+    },
+    {
+      "id": "sr-hs-5",
+      "studentId": "hs-5",
+      "schoolYear": "2025 - 2026",
+      "semester": "Học kỳ 1",
+      "mathScore": 9,
+      "mathLevel": "T",
+      "vietnameseScore": 9,
+      "vietnameseLevel": "T",
+      "englishScore": 9,
+      "englishLevel": "T",
+      "scienceLevel": "T",
+      "historyGeoLevel": "T",
+      "ethicsLevel": "T",
+      "musicLevel": "T",
+      "artLevel": "T",
+      "peLevel": "T",
+      "selfAutonomy": "T",
+      "communication": "T",
+      "problemSolving": "T",
+      "patriotism": "T",
+      "compassion": "T",
+      "diligence": "T",
+      "honesty": "T",
+      "responsibility": "T",
+      "awardTitle": "Học sinh Tiêu biểu hoàn thành tốt",
+      "overallComment": "Em chăm ngoan, lễ phép, hoàn thành xuất sắc các nội dung học tập và rèn luyện."
+    },
+    {
+      "id": "sr-hs-6",
+      "studentId": "hs-6",
+      "schoolYear": "2025 - 2026",
+      "semester": "Học kỳ 1",
+      "mathScore": 9,
+      "mathLevel": "T",
+      "vietnameseScore": 8,
+      "vietnameseLevel": "T",
+      "englishScore": 9,
+      "englishLevel": "T",
+      "scienceLevel": "T",
+      "historyGeoLevel": "T",
+      "ethicsLevel": "T",
+      "musicLevel": "T",
+      "artLevel": "T",
+      "peLevel": "T",
+      "selfAutonomy": "T",
+      "communication": "T",
+      "problemSolving": "T",
+      "patriotism": "T",
+      "compassion": "T",
+      "diligence": "T",
+      "honesty": "T",
+      "responsibility": "T",
+      "awardTitle": "Học sinh Tiêu biểu hoàn thành tốt",
+      "overallComment": "Em chăm ngoan, lễ phép, hoàn thành xuất sắc các nội dung học tập và rèn luyện."
+    },
+    {
+      "id": "sr-hs-7",
+      "studentId": "hs-7",
+      "schoolYear": "2025 - 2026",
+      "semester": "Học kỳ 1",
+      "mathScore": 9,
+      "mathLevel": "H",
+      "vietnameseScore": 8,
+      "vietnameseLevel": "T",
+      "englishScore": 9,
+      "englishLevel": "T",
+      "scienceLevel": "T",
+      "historyGeoLevel": "T",
+      "ethicsLevel": "T",
+      "musicLevel": "T",
+      "artLevel": "T",
+      "peLevel": "T",
+      "selfAutonomy": "T",
+      "communication": "T",
+      "problemSolving": "H",
+      "patriotism": "T",
+      "compassion": "T",
+      "diligence": "T",
+      "honesty": "T",
+      "responsibility": "T",
+      "awardTitle": "Học sinh Tiêu biểu hoàn thành tốt",
+      "overallComment": "Em chăm ngoan, lễ phép, hoàn thành xuất sắc các nội dung học tập và rèn luyện."
+    },
+    {
+      "id": "sr-hs-8",
+      "studentId": "hs-8",
+      "schoolYear": "2025 - 2026",
+      "semester": "Học kỳ 1",
+      "mathScore": 9,
+      "mathLevel": "H",
+      "vietnameseScore": 8,
+      "vietnameseLevel": "T",
+      "englishScore": 10,
+      "englishLevel": "T",
+      "scienceLevel": "T",
+      "historyGeoLevel": "T",
+      "ethicsLevel": "T",
+      "musicLevel": "T",
+      "artLevel": "T",
+      "peLevel": "T",
+      "selfAutonomy": "T",
+      "communication": "T",
+      "problemSolving": "H",
+      "patriotism": "T",
+      "compassion": "T",
+      "diligence": "T",
+      "honesty": "T",
+      "responsibility": "T",
+      "awardTitle": "Học sinh Tiêu biểu hoàn thành tốt",
+      "overallComment": "Em chăm ngoan, lễ phép, hoàn thành xuất sắc các nội dung học tập và rèn luyện."
+    },
+    {
+      "id": "sr-hs-9",
+      "studentId": "hs-9",
+      "schoolYear": "2025 - 2026",
+      "semester": "Học kỳ 1",
+      "mathScore": 8,
+      "mathLevel": "H",
+      "vietnameseScore": 8,
+      "vietnameseLevel": "H",
+      "englishScore": 9,
+      "englishLevel": "T",
+      "scienceLevel": "T",
+      "historyGeoLevel": "T",
+      "ethicsLevel": "T",
+      "musicLevel": "T",
+      "artLevel": "T",
+      "peLevel": "T",
+      "selfAutonomy": "H",
+      "communication": "T",
+      "problemSolving": "H",
+      "patriotism": "T",
+      "compassion": "T",
+      "diligence": "T",
+      "honesty": "T",
+      "responsibility": "T",
+      "awardTitle": "Học sinh Tiêu biểu hoàn thành tốt",
+      "overallComment": "Em chăm ngoan, lễ phép, hoàn thành xuất sắc các nội dung học tập và rèn luyện."
+    },
+    {
+      "id": "sr-hs-10",
+      "studentId": "hs-10",
+      "schoolYear": "2025 - 2026",
+      "semester": "Học kỳ 1",
+      "mathScore": 8,
+      "mathLevel": "H",
+      "vietnameseScore": 8,
+      "vietnameseLevel": "H",
+      "englishScore": 9,
+      "englishLevel": "T",
+      "scienceLevel": "T",
+      "historyGeoLevel": "T",
+      "ethicsLevel": "T",
+      "musicLevel": "T",
+      "artLevel": "T",
+      "peLevel": "T",
+      "selfAutonomy": "H",
+      "communication": "T",
+      "problemSolving": "H",
+      "patriotism": "T",
+      "compassion": "T",
+      "diligence": "T",
+      "honesty": "T",
+      "responsibility": "T",
+      "awardTitle": "Học sinh Tiêu biểu hoàn thành tốt",
+      "overallComment": "Em chăm ngoan, lễ phép, hoàn thành xuất sắc các nội dung học tập và rèn luyện."
+    },
+    {
+      "id": "sr-hs-11",
+      "studentId": "hs-11",
+      "schoolYear": "2025 - 2026",
+      "semester": "Học kỳ 1",
+      "mathScore": 8,
+      "mathLevel": "H",
+      "vietnameseScore": 8,
+      "vietnameseLevel": "H",
+      "englishScore": 9,
+      "englishLevel": "T",
+      "scienceLevel": "T",
+      "historyGeoLevel": "T",
+      "ethicsLevel": "T",
+      "musicLevel": "T",
+      "artLevel": "T",
+      "peLevel": "T",
+      "selfAutonomy": "H",
+      "communication": "T",
+      "problemSolving": "H",
+      "patriotism": "T",
+      "compassion": "T",
+      "diligence": "T",
+      "honesty": "T",
+      "responsibility": "T",
+      "awardTitle": "Học sinh Tiêu biểu hoàn thành tốt",
+      "overallComment": "Em chăm ngoan, lễ phép, hoàn thành xuất sắc các nội dung học tập và rèn luyện."
+    },
+    {
+      "id": "sr-hs-12",
+      "studentId": "hs-12",
+      "schoolYear": "2025 - 2026",
+      "semester": "Học kỳ 1",
+      "mathScore": 8,
+      "mathLevel": "H",
+      "vietnameseScore": 8,
+      "vietnameseLevel": "H",
+      "englishScore": 9,
+      "englishLevel": "T",
+      "scienceLevel": "T",
+      "historyGeoLevel": "T",
+      "ethicsLevel": "T",
+      "musicLevel": "T",
+      "artLevel": "T",
+      "peLevel": "T",
+      "selfAutonomy": "H",
+      "communication": "T",
+      "problemSolving": "H",
+      "patriotism": "T",
+      "compassion": "T",
+      "diligence": "T",
+      "honesty": "T",
+      "responsibility": "T",
+      "awardTitle": "Học sinh Tiêu biểu hoàn thành tốt",
+      "overallComment": "Em chăm ngoan, lễ phép, hoàn thành xuất sắc các nội dung học tập và rèn luyện."
+    }
+  ],
+  "games": [
+    {
+      "id": "game-1",
+      "title": "Ong Vàng Tìm Chữ - English Vocab Fun",
+      "category": "english_vocab",
+      "description": "Game đố vui từ vựng tiếng Anh vui nhộn với giọng đọc chuẩn và hình ảnh sinh động.",
+      "icon": "🐝",
+      "playCount": 24,
+      "questions": [
+        {
+          "id": "q1",
+          "prompt": "What animal is this?",
+          "englishWord": "Elephant",
+          "pronunciation": "/ˈelɪfənt/",
+          "image": "🐘",
+          "options": [
+            "Elephant",
+            "Lion",
+            "Monkey",
+            "Zebra"
+          ],
+          "correctIndex": 0,
+          "explanation": "Elephant nghĩa là con voi to lớn."
+        },
+        {
+          "id": "q2",
+          "prompt": "What color is the Sun?",
+          "englishWord": "Yellow",
+          "pronunciation": "/ˈjeləʊ/",
+          "image": "☀️",
+          "options": [
+            "Blue",
+            "Yellow",
+            "Green",
+            "Purple"
+          ],
+          "correctIndex": 1,
+          "explanation": "Mặt trời có màu vàng (Yellow)."
+        },
+        {
+          "id": "q3",
+          "prompt": "Choose the correct fruit:",
+          "englishWord": "Apple",
+          "pronunciation": "/ˈæpl/",
+          "image": "🍎",
+          "options": [
+            "Orange",
+            "Banana",
+            "Apple",
+            "Watermelon"
+          ],
+          "correctIndex": 2,
+          "explanation": "Quả táo màu đỏ thơm ngon là Apple."
+        },
+        {
+          "id": "q4",
+          "prompt": "Which one is a school object?",
+          "englishWord": "Pencil",
+          "pronunciation": "/ˈpensl/",
+          "image": "✏️",
+          "options": [
+            "Car",
+            "Bed",
+            "Pencil",
+            "Spoon"
+          ],
+          "correctIndex": 2,
+          "explanation": "Pencil là chiếc bút chì xinh xắn."
+        },
+        {
+          "id": "q5",
+          "prompt": "What is the action in the picture?",
+          "englishWord": "Read books",
+          "pronunciation": "/riːd bʊks/",
+          "image": "📖",
+          "options": [
+            "Sleep",
+            "Read books",
+            "Swim",
+            "Jump"
+          ],
+          "correctIndex": 1,
+          "explanation": "Read books nghĩa là đọc sách."
+        }
+      ]
+    },
+    {
+      "id": "game-tv1",
+      "title": "Bé Yêu Tiếng Việt 1 - Nhận Biết Âm Vần & Từ Ngữ",
+      "category": "trivia",
+      "description": "Trò chơi rèn luyện âm vần, ghép chữ và nhận biết tiếng dành cho học sinh Lớp 1 có giọng đọc chậm dễ nghe.",
+      "icon": "📚",
+      "playCount": 42,
+      "questions": [
+        {
+          "id": "tvq1",
+          "prompt": "Chữ cái nào đứng đầu trong từ \"Bố Mẹ\"?",
+          "image": "👨‍👩‍👦",
+          "options": [
+            "Chữ B",
+            "Chữ C",
+            "Chữ M",
+            "Chữ D"
+          ],
+          "correctIndex": 0,
+          "explanation": "Chữ B là âm đầu trong tiếng \"Bố\"."
+        },
+        {
+          "id": "tvq2",
+          "prompt": "Tiếng nào dưới đây có chứa vần \"an\"?",
+          "image": "🪑",
+          "options": [
+            "Cái bàn",
+            "Bông hoa",
+            "Con gà",
+            "Quyển vở"
+          ],
+          "correctIndex": 0,
+          "explanation": "Tiếng \"bàn\" gồm âm b ghép với vần \"an\" và dấu huyền."
+        },
+        {
+          "id": "tvq3",
+          "prompt": "Hình ảnh nào là con vật nuôi bắt chuột quen thuộc trong gia đình?",
+          "image": "🐱",
+          "englishWord": "Cat",
+          "options": [
+            "Con mèo",
+            "Cái ghế",
+            "Ô tô",
+            "Cây dừa"
+          ],
+          "correctIndex": 0,
+          "explanation": "Con mèo (Cat) là vật nuôi thân thiết bắt chuột giúp cả nhà!"
+        },
+        {
+          "id": "tvq4",
+          "prompt": "Điền từ còn thiếu vào câu: \"Cả nhà cùng ... nhau\"?",
+          "image": "❤️",
+          "options": [
+            "yêu thương",
+            "chạy nhanh",
+            "đi ngủ",
+            "học bài"
+          ],
+          "correctIndex": 0,
+          "explanation": "Cả nhà luôn yêu thương và quan tâm chăm sóc lẫn nhau."
+        },
+        {
+          "id": "tvq5",
+          "prompt": "Từ nào dưới đây là từ chỉ màu sắc tươi sáng của lá cây?",
+          "image": "🍃",
+          "englishWord": "Green",
+          "options": [
+            "Màu xanh lá cây",
+            "Màu đen",
+            "Chạy bộ",
+            "Cặp sách"
+          ],
+          "correctIndex": 0,
+          "explanation": "Xanh lá cây (Green) là màu của mầm non và lá tươi."
+        }
+      ]
+    },
+    {
+      "id": "game-math1",
+      "title": "Vườn Hoa Phép Tính 1 - Bé Vui Học Toán",
+      "category": "math_blitz",
+      "description": "Luyện tập các phép tính cộng trừ trong phạm vi 10, nhận biết hình học với giọng đọc chậm rãi, dịu dàng.",
+      "icon": "🌸",
+      "playCount": 35,
+      "questions": [
+        {
+          "id": "mq10",
+          "prompt": "Bé có 3 quả táo đỏ, mẹ cho thêm 2 quả táo nữa. Hỏi bé có tất cả mấy quả táo?",
+          "image": "🍎",
+          "options": [
+            "4 quả táo",
+            "5 quả táo",
+            "6 quả táo",
+            "3 quả táo"
+          ],
+          "correctIndex": 1,
+          "explanation": "3 cộng thêm 2 bằng 5 quả táo thơm ngon!"
+        },
+        {
+          "id": "mq11",
+          "prompt": "Trên cành cây có 6 chú chim, 2 chú chim bay đi. Hỏi trên cành còn lại mấy chú chim?",
+          "image": "🐦",
+          "options": [
+            "3 chú chim",
+            "4 chú chim",
+            "5 chú chim",
+            "2 chú chim"
+          ],
+          "correctIndex": 1,
+          "explanation": "6 bớt 2 chú chim bay đi thì còn lại đúng 4 chú chim."
+        },
+        {
+          "id": "mq12",
+          "prompt": "Phép tính nào dưới đây có kết quả đúng bằng 10?",
+          "image": "🔟",
+          "options": [
+            "7 + 3",
+            "5 + 4",
+            "8 + 1",
+            "6 + 2"
+          ],
+          "correctIndex": 0,
+          "explanation": "7 cộng 3 bằng 10."
+        },
+        {
+          "id": "mq13",
+          "prompt": "Hình nào có 4 cạnh bằng nhau và có 4 góc vuông vắn?",
+          "image": "🟩",
+          "englishWord": "Square",
+          "options": [
+            "Hình vuông",
+            "Hình tròn",
+            "Hình tam giác",
+            "Hình bầu dục"
+          ],
+          "correctIndex": 0,
+          "explanation": "Hình vuông (Square) có 4 cạnh bằng nhau."
+        },
+        {
+          "id": "mq14",
+          "prompt": "Số liền sau ngay sau số 9 là số mấy?",
+          "image": "🔢",
+          "options": [
+            "Số 10",
+            "Số 8",
+            "Số 7",
+            "Số 11"
+          ],
+          "correctIndex": 0,
+          "explanation": "Đếm tiếp theo 9 là số 10 (Ten)."
+        }
+      ]
+    },
+    {
+      "id": "game-tnxh1",
+      "title": "Nhà Thông Thái Nhí - Tự Nhiên & Xã Hội 1",
+      "category": "trivia",
+      "description": "Khám phá thế giới quanh em, nhận biết cơ thể, an toàn giao thông và thói quen vệ sinh sạch sẽ cho bé lớp 1.",
+      "icon": "🌱",
+      "playCount": 28,
+      "questions": [
+        {
+          "id": "tn1",
+          "prompt": "Bộ phận nào trên gương mặt giúp chúng ta nhìn ngắm thế giới tươi đẹp?",
+          "image": "👀",
+          "englishWord": "Eyes",
+          "options": [
+            "Đôi mắt",
+            "Đôi tai",
+            "Cái mũi",
+            "Bàn tay"
+          ],
+          "correctIndex": 0,
+          "explanation": "Đôi mắt (Eyes) là cửa sổ tâm hồn giúp ta nhìn thấy mọi thứ."
+        },
+        {
+          "id": "tn2",
+          "prompt": "Khi đi qua đường gặp đèn tín hiệu giao thông màu ĐỎ, chúng ta phải làm gì?",
+          "image": "🚦",
+          "englishWord": "Red Light - Stop",
+          "options": [
+            "Dừng lại",
+            "Đi thật nhanh",
+            "Bấm còi to",
+            "Chạy băng qua"
+          ],
+          "correctIndex": 0,
+          "explanation": "Đèn đỏ báo hiệu phải dừng lại an toàn."
+        },
+        {
+          "id": "tn3",
+          "prompt": "Trước khi ăn cơm và sau khi đi vệ sinh, bé cần làm việc gì quan trọng?",
+          "image": "🧼",
+          "options": [
+            "Rửa tay sạch bằng xà phòng",
+            "Uống nước ngọt",
+            "Đi xem tivi",
+            "Chạy nhảy ngoài sân"
+          ],
+          "correctIndex": 0,
+          "explanation": "Rửa tay sạch giúp bảo vệ bé khỏi vi khuẩn và phòng tránh bệnh tật."
+        },
+        {
+          "id": "tn4",
+          "prompt": "Thời tiết mùa nào trong năm có ánh nắng chói chang, ve kêu và bé được nghỉ hè?",
+          "image": "☀️",
+          "englishWord": "Summer",
+          "options": [
+            "Mùa hè",
+            "Mùa đông",
+            "Mùa bão",
+            "Mùa tuyết"
+          ],
+          "correctIndex": 0,
+          "explanation": "Mùa hè (Summer) có hoa phượng đỏ, ve kêu râm ran và thời tiết ấm áp."
+        },
+        {
+          "id": "tn5",
+          "prompt": "Để giữ gìn lớp học luôn sạch đẹp, rác thải bé cần bỏ vào đâu?",
+          "image": "🗑️",
+          "options": [
+            "Thùng rác có nắp đậy",
+            "Ngăn bàn học",
+            "Góc lớp học",
+            "Dưới sàn nhà"
+          ],
+          "correctIndex": 0,
+          "explanation": "Bỏ rác đúng nơi quy định vào thùng rác giúp giữ lớp học luôn sạch sẽ!"
+        }
+      ]
+    },
+    {
+      "id": "game-anim1",
+      "title": "Thế Giới Động Vật Vui Nhộn - Animal Friends 1",
+      "category": "english_vocab",
+      "description": "Nhận biết các loài động vật dễ thương, tiếng kêu và học từ vựng tiếng Anh vui nhộn.",
+      "icon": "🐾",
+      "playCount": 31,
+      "questions": [
+        {
+          "id": "an1",
+          "prompt": "Con vật nào biết gáy \"Ò ó o\" đánh thức mọi người thức dậy mỗi sớm mai?",
+          "image": "🐓",
+          "englishWord": "Rooster",
+          "pronunciation": "/ˈruːstər/",
+          "options": [
+            "Con gà trống",
+            "Con vịt bầu",
+            "Con bò sữa",
+            "Con lợn con"
+          ],
+          "correctIndex": 0,
+          "explanation": "Gà trống cất tiếng gáy báo hiệu một ngày mới bắt đầu."
+        },
+        {
+          "id": "an2",
+          "prompt": "Con vật nào bơi lội tung tăng dưới nước và thở bằng mang?",
+          "image": "🐟",
+          "englishWord": "Fish",
+          "pronunciation": "/fɪʃ/",
+          "options": [
+            "Con cá",
+            "Con thỏ",
+            "Con chim bồ câu",
+            "Con sóc"
+          ],
+          "correctIndex": 0,
+          "explanation": "Con cá (Fish) sống dưới nước và bơi lội rất khéo léo."
+        },
+        {
+          "id": "an3",
+          "prompt": "Con vật nào có đôi tai dài xinh xắn, mắt tròn xoe và rất thích ăn củ cà rốt?",
+          "image": "🐰",
+          "englishWord": "Rabbit",
+          "pronunciation": "/ˈræbɪt/",
+          "options": [
+            "Con thỏ",
+            "Con hổ",
+            "Con gấu",
+            "Con chuột túi"
+          ],
+          "correctIndex": 0,
+          "explanation": "Con thỏ trắng (Rabbit) với đôi tai dài đáng yêu thích ăn cà rốt."
+        },
+        {
+          "id": "an4",
+          "prompt": "Loài vật to lớn nhất trên cạn, có chiếc vòi dài khéo léo để hút nước và hái lá là con gì?",
+          "image": "🐘",
+          "englishWord": "Elephant",
+          "pronunciation": "/ˈelɪfənt/",
+          "options": [
+            "Con voi",
+            "Con hươu cao cổ",
+            "Con ngựa",
+            "Con cừu"
+          ],
+          "correctIndex": 0,
+          "explanation": "Con voi (Elephant) có chiếc vòi dài kì diệu và đôi tai to như cái quạt."
+        },
+        {
+          "id": "an5",
+          "prompt": "Chú cún con thông minh trong nhà thường sủa tiếng gì để báo có khách?",
+          "image": "🐶",
+          "englishWord": "Dog",
+          "pronunciation": "/dɔːɡ/",
+          "options": [
+            "Gâu gâu",
+            "Meo meo",
+            "Cục tác",
+            "Ụt ịt"
+          ],
+          "correctIndex": 0,
+          "explanation": "Chú cún con (Dog) sủa gâu gâu trông nhà rất giỏi."
+        }
+      ]
+    },
+    {
+      "id": "game-eng1",
+      "title": "Bé Vui Học Nói Tiếng Anh Lớp 1 - First English Words",
+      "category": "english_vocab",
+      "description": "Luyện tập các từ tiếng Anh đầu đời: Lời chào, màu sắc, số đếm và đồ dùng học tập của bé.",
+      "icon": "🌟",
+      "playCount": 45,
+      "questions": [
+        {
+          "id": "engq1",
+          "prompt": "Khi gặp cô giáo hoặc bạn bè vào buổi sáng, em nói câu tiếng Anh nào để chào hỏi?",
+          "image": "👋",
+          "englishWord": "Hello / Good morning",
+          "pronunciation": "/həˈləʊ/ /ɡʊd ˈmɔːnɪŋ/",
+          "options": [
+            "Hello / Good morning",
+            "Goodbye",
+            "Thank you",
+            "I am sorry"
+          ],
+          "correctIndex": 0,
+          "explanation": "\"Hello\" hoặc \"Good morning\" nghĩa là Xin chào buổi sáng!"
+        },
+        {
+          "id": "engq2",
+          "prompt": "Số 1 trong Tiếng Anh đọc là gì?",
+          "image": "1️⃣",
+          "englishWord": "One",
+          "pronunciation": "/wʌn/",
+          "options": [
+            "One",
+            "Two",
+            "Three",
+            "Four"
+          ],
+          "correctIndex": 0,
+          "explanation": "Số 1 là One, số 2 là Two, số 3 là Three."
+        },
+        {
+          "id": "engq3",
+          "prompt": "Màu đỏ tươi của quả dâu tây và hoa hồng trong Tiếng Anh là gì?",
+          "image": "🍓",
+          "englishWord": "Red",
+          "pronunciation": "/red/",
+          "options": [
+            "Red",
+            "Blue",
+            "Yellow",
+            "White"
+          ],
+          "correctIndex": 0,
+          "explanation": "Màu đỏ là Red."
+        },
+        {
+          "id": "engq4",
+          "prompt": "Chiếc cặp sách xinh xắn để đựng sách vở đến trường trong Tiếng Anh là gì?",
+          "image": "🎒",
+          "englishWord": "School bag",
+          "pronunciation": "/ˈskuːl bæɡ/",
+          "options": [
+            "School bag",
+            "Bicycle",
+            "Table",
+            "Clock"
+          ],
+          "correctIndex": 0,
+          "explanation": "School bag là chiếc cặp sách đồng hành cùng bé mỗi ngày."
+        },
+        {
+          "id": "engq5",
+          "prompt": "Khi được người khác giúp đỡ hoặc tặng quà, bé nói lời cảm ơn bằng Tiếng Anh thế nào?",
+          "image": "🙏",
+          "englishWord": "Thank you",
+          "pronunciation": "/ˈθæŋk juː/",
+          "options": [
+            "Thank you",
+            "Hello",
+            "No, thanks",
+            "Goodbye"
+          ],
+          "correctIndex": 0,
+          "explanation": "\"Thank you\" nghĩa là Con cảm ơn / Cảm ơn bạn!"
+        }
+      ]
+    },
+    {
+      "id": "game-speed",
+      "title": "Thử Thách Tính Nhanh - Siêu Nhí Toán Học",
+      "category": "math_blitz",
+      "description": "Thử thách tính nhẩm 10 câu liên tiếp trong phạm vi 10 và 20 có tính giờ kịch tính.",
+      "icon": "⚡",
+      "playCount": 38,
+      "questions": [
+        {
+          "id": "mq1",
+          "prompt": "5 + 4 = ?",
+          "options": [
+            "8",
+            "9",
+            "10",
+            "7"
+          ],
+          "correctIndex": 1,
+          "explanation": "5 cộng 4 bằng 9."
+        },
+        {
+          "id": "mq2",
+          "prompt": "10 - 6 = ?",
+          "options": [
+            "3",
+            "4",
+            "5",
+            "6"
+          ],
+          "correctIndex": 1,
+          "explanation": "10 bớt 6 còn 4."
+        },
+        {
+          "id": "mq3",
+          "prompt": "8 + 7 = ?",
+          "options": [
+            "14",
+            "15",
+            "16",
+            "13"
+          ],
+          "correctIndex": 1,
+          "explanation": "8 cộng 7 bằng 15."
+        },
+        {
+          "id": "mq4",
+          "prompt": "18 - 9 = ?",
+          "options": [
+            "8",
+            "9",
+            "10",
+            "7"
+          ],
+          "correctIndex": 1,
+          "explanation": "18 trừ 9 bằng 9."
+        },
+        {
+          "id": "mq5",
+          "prompt": "Hình nào có đúng 3 cạnh?",
+          "options": [
+            "Hình vuông",
+            "Hình tròn",
+            "Hình tam giác",
+            "Hình chữ nhật"
+          ],
+          "correctIndex": 2,
+          "explanation": "Hình tam giác có đúng 3 cạnh và 3 đỉnh."
+        }
+      ]
+    },
+    {
+      "id": "game-3",
+      "title": "Kahoot: Rung Chuông Vàng Khối 1",
+      "category": "external",
+      "description": "Bộ câu hỏi trắc nghiệm kiến thức tổng hợp trực tiếp trên Kahoot.",
+      "icon": "🟣",
+      "playCount": 16,
+      "externalUrl": "https://kahoot.it"
+    },
+    {
+      "id": "game-4",
+      "title": "Wordwall: Nối Chữ Cái và Hình Ảnh",
+      "category": "external",
+      "description": "Trò chơi kéo thả nối từ vựng tương tác cao thiết kế trên Wordwall.",
+      "icon": "🔵",
+      "playCount": 29,
+      "externalUrl": "https://wordwall.net"
+    },
+    {
+      "id": "game-5",
+      "title": "Quizizz: Tiếng Việt 1 - Ôn Tập Âm Vần",
+      "category": "external",
+      "description": "Đố vui ôn tập vần kết hợp nhận huy hiệu trên Quizizz.",
+      "icon": "🟣",
+      "playCount": 21,
+      "externalUrl": "https://quizizz.com"
+    }
+  ],
+  "music": [
+    {
+      "id": "music-1",
+      "title": "Bống Bống Bang Bang (Khởi động thể dục sôi động)",
+      "url": "https://www.youtube.com/watch?v=kYg8j2f_W1Q",
+      "category": "warmup",
+      "description": "Vũ điệu sôi động, giúp các em học sinh lớp 1 khởi động cơ thể và tinh thần hứng khởi trước giờ học.",
+      "thumbnail": "https://images.unsplash.com/photo-1511671782779-c97d3d27a1d4?w=500&auto=format&fit=crop&q=60",
+      "icon": "🎵",
+      "playCount": 15
+    },
+    {
+      "id": "music-2",
+      "title": "Head, Shoulders, Knees and Toes (Tiếng Anh vui nhộn)",
+      "url": "https://www.youtube.com/watch?v=QA48wTGbU7A",
+      "category": "english",
+      "description": "Vừa hát theo vừa chỉ vào mắt, mũi, tai, vai, đầu gối. Rèn luyện phản xạ tiếng Anh nhanh nhẹn cho học sinh.",
+      "thumbnail": "https://images.unsplash.com/photo-1514525253161-7a46d19cd819?w=500&auto=format&fit=crop&q=60",
+      "icon": "🗣️",
+      "playCount": 22
+    },
+    {
+      "id": "music-3",
+      "title": "Tập Tầm Vông (Trò chơi âm nhạc dân gian)",
+      "url": "https://www.youtube.com/watch?v=Y_XmZc04Z9c",
+      "category": "fun",
+      "description": "Bài hát đồng dao gắn bó với tuổi thơ, rất phù hợp cho các trò chơi khởi động đoán tay, đố vui trên lớp.",
+      "thumbnail": "https://images.unsplash.com/photo-1508700115892-45ecd05ae2ad?w=500&auto=format&fit=crop&q=60",
+      "icon": "🪘",
+      "playCount": 9
+    },
+    {
+      "id": "music-4",
+      "title": "Baby Shark Dance (Sing & Dance along)",
+      "url": "https://www.youtube.com/watch?v=XqZsoesa55w",
+      "category": "english",
+      "description": "Giai điệu vui nhộn quen thuộc, các động tác mô phỏng chú cá mập dễ thương được các bé lớp 1 vô cùng yêu thích.",
+      "thumbnail": "https://images.unsplash.com/photo-1470225620780-dba8ba36b745?w=500&auto=format&fit=crop&q=60",
+      "icon": "🦈",
+      "playCount": 18
+    },
+    {
+      "id": "music-5",
+      "title": "Bài Ca Đi Học (Tươi vui rộn rã đến trường)",
+      "url": "https://www.youtube.com/watch?v=M0064pY8Zyo",
+      "category": "relax",
+      "description": "Bình minh tươi sáng, tiếng chim reo vang. Bài hát truyền cảm hứng học tập và yêu mến trường lớp bạn bè.",
+      "thumbnail": "https://images.unsplash.com/photo-1465847899084-d164df4dedc6?w=500&auto=format&fit=crop&q=60",
+      "icon": "🎒",
+      "playCount": 12
+    },
+    {
+      "id": "music-6",
+      "title": "Vũ điệu Gà Con - The Chicken Dance (Giải lao sảng khoái)",
+      "url": "https://www.youtube.com/watch?v=4xvg7bkyKkQ",
+      "category": "fun",
+      "description": "Vũ điệu xả stress giữa tiết học, giúp các em thư giãn tay chân sau những giờ tập viết chữ và tính toán.",
+      "thumbnail": "https://images.unsplash.com/photo-1516450360452-9312f5e86fc7?w=500&auto=format&fit=crop&q=60",
+      "icon": "🐣",
+      "playCount": 8
+    }
+  ],
+  "messages": [
+    {
+      "id": "msg-1",
+      "studentId": "hs-1",
+      "studentName": "Nguyễn Bảo Nam",
+      "parentName": "Nguyễn Văn Hùng",
+      "parentPhone": "0912 345 678",
+      "content": "Dạ chào cô Mai Phương, hôm nay cháu Nam về nhà rất vui vì được quay trúng tên phát biểu và nhận điểm thưởng. Gia đình cảm ơn cô nhiều ạ!",
+      "date": "2026-10-13 18:30",
+      "reply": "Dạ cảm ơn gia đình. Nam hôm nay học rất tập trung và hăng hái giơ tay. Cô rất khen con ạ!",
+      "replyDate": "2026-10-13 19:15",
+      "isRead": true
+    },
+    {
+      "id": "msg-2",
+      "studentId": "hs-3",
+      "studentName": "Lê Minh Khang",
+      "parentName": "Lê Tuấn Anh",
+      "parentPhone": "0987 654 321",
+      "content": "Thưa cô, ngày mai gia đình có việc đưa cháu về quê ăn giỗ buổi sáng, cháu xin phép đến lớp muộn lúc 9h30 được không ạ?",
+      "date": "2026-10-14 07:10",
+      "reply": "Dạ được ạ, bố cho con vào lớp an toàn nhé. Cô sẽ kèm bài đầu giờ cho con.",
+      "replyDate": "2026-10-14 07:45",
+      "isRead": true
+    },
+    {
+      "id": "msg-3",
+      "studentId": "hs-5",
+      "studentName": "Phạm Đức Anh",
+      "parentName": "Phạm Văn Thành",
+      "parentPhone": "0978 112 233",
+      "content": "Cô ơi, tuần này con hơi lơ đãng bài tập toán, nhờ cô nhắc nhở thêm giúp gia đình với nhé.",
+      "date": "2026-10-14 08:20",
+      "isRead": false
+    }
+  ],
+  "loginLogs": [
+    {
+      "id": "log-1",
+      "studentId": "hs-1",
+      "studentName": "Nguyễn Bảo Nam",
+      "parentName": "Nguyễn Văn Hùng",
+      "loginTime": "2026-10-14 08:45:20",
+      "deviceInfo": "Mobile (iOS/Safari)"
+    },
+    {
+      "id": "log-2",
+      "studentId": "hs-2",
+      "studentName": "Trần Hà Linh",
+      "parentName": "Trần Thị Thảo",
+      "loginTime": "2026-10-14 07:55:12",
+      "deviceInfo": "Desktop (Chrome/Windows)"
+    },
+    {
+      "id": "log-3",
+      "studentId": "hs-4",
+      "studentName": "Hoàng Thảo Vy",
+      "parentName": "Hoàng Minh Long",
+      "loginTime": "2026-10-13 20:10:45",
+      "deviceInfo": "Mobile (Android/Chrome)"
+    },
+    {
+      "id": "log-4",
+      "studentId": "hs-1",
+      "studentName": "Nguyễn Bảo Nam",
+      "parentName": "Nguyễn Văn Hùng",
+      "loginTime": "2026-10-13 18:25:01",
+      "deviceInfo": "Mobile (iOS/Safari)"
+    },
+    {
+      "id": "log-5",
+      "studentId": "hs-8",
+      "studentName": "Bùi Mai Anh",
+      "parentName": "Bùi Văn Tiến",
+      "loginTime": "2026-10-12 19:40:33",
+      "deviceInfo": "iPad (Safari)"
+    }
+  ]
+}

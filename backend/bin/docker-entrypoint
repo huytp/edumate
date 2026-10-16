@@ -1,0 +1,12 @@
+#!/bin/bash
+set -e
+
+# A stale pid file prevents Rails from booting after the container is restarted.
+rm -f /app/tmp/pids/server.pid
+
+if [ "$1" = "bin/rails" ] && [ "$2" = "server" ]; then
+  # Create/migrate the database and load the sample class on first boot.
+  bin/rails db:prepare
+fi
+
+exec "$@"

@@ -1,0 +1,51 @@
+services:
+  db:
+    image: mysql:8.4
+    environment:
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD:-edumate_root}
+      MYSQL_DATABASE: ${MYSQL_DATABASE:-edumate_development}
+      MYSQL_USER: ${MYSQL_USER:-edumate}
+      MYSQL_PASSWORD: ${MYSQL_PASSWORD:-edumate}
+    command: --character-set-server=utf8mb4 --collation-server=utf8mb4_unicode_ci
+    ports:
+      - "3307:3306" # 3307 on the host to avoid clashing with a local MySQL
+    volumes:
+      - mysql_data:/var/lib/mysql
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "127.0.0.1", "-uroot", "-p${MYSQL_ROOT_PASSWORD:-edumate_root}"]
+      interval: 5s
+      timeout: 5s
+      retries: 20
+
+  backend:
+    build: ./backend
+    environment:
+      RAILS_ENV: development
+      DB_HOST: db
+      DB_PORT: 3306
+      DB_NAME: ${MYSQL_DATABASE:-edumate_development}
+      # Root is used so `db:prepare` can create the database on first boot.
+      DB_USERNAME: root
+      DB_PASSWORD: ${MYSQL_ROOT_PASSWORD:-edumate_root}
+    ports:
+      - "3001:3000"
+    volumes:
+      - ./backend:/app
+    depends_on:
+      db:
+        condition: service_healthy
+
+  frontend:
+    build: .
+    environment:
+      API_PROXY_TARGET: http://backend:3000
+    ports:
+      - "3000:3000"
+    volumes:
+      - .:/app
+      - /app/node_modules # keep the container's Linux node_modules
+    depends_on:
+      - backend
+
+volumes:
+  mysql_data:
