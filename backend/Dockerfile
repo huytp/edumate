@@ -6,7 +6,10 @@ RUN apt-get update -qq \
 
 WORKDIR /app
 
-ENV BUNDLE_PATH=/usr/local/bundle
+# Production builds pass BUNDLE_WITHOUT=development:test
+ARG BUNDLE_WITHOUT=""
+ENV BUNDLE_PATH=/usr/local/bundle \
+    BUNDLE_WITHOUT=${BUNDLE_WITHOUT}
 
 COPY Gemfile Gemfile.lock ./
 RUN bundle install

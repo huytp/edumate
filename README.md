@@ -119,6 +119,24 @@ Dữ liệu mẫu nằm ở `backend/db/seeds/default_data.json`, được sinh 
 
 ---
 
+## 🚀 Môi Trường Production (Docker)
+
+Stack production gồm MySQL, Rails (chế độ production) và nginx phục vụ frontend đã build sẵn, đồng thời chuyển `/api` sang Rails. Toàn bộ chạy qua một cổng duy nhất (mặc định 8080).
+
+```bash
+cp .env.production.example .env.production   # rồi thay toàn bộ giá trị (openssl rand -hex 24 / 64)
+npm run prod:up      # = docker compose -f docker-compose.prod.yml --env-file .env.production up -d --build
+npm run prod:logs    # xem log
+npm run prod:down    # dừng (giữ dữ liệu)
+```
+
+- Truy cập: `http://<máy chủ>:8080`
+- Production **không** tạo tài khoản demo, nên người dùng phải tự đăng ký.
+- Tên project là `edumate-prod` (container, network, volume đều riêng), chạy song song được với stack dev.
+- Khi đã có domain và HTTPS (ví dụ qua Caddy), đặt `FORCE_SSL=true` trong `.env.production`.
+
+---
+
 ## 📱 Sử Dụng Trên Điện Thoại (Thêm vào Màn hình chính như App)
 
 1. Mở link ứng dụng trên trình duyệt điện thoại (Safari trên iPhone hoặc Chrome trên Android).

@@ -1,0 +1,8 @@
+# Used instead of .dockerignore for Dockerfile.prod; keeps public/*.zip for the download buttons.
+node_modules
+dist
+backend
+.git
+.env*
+/edumate-source-code.zip
+.DS_Store
