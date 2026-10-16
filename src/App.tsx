@@ -166,17 +166,6 @@ export default function App({ account, onSignOut }: AppProps) {
     soundManager.playSuccess();
   };
 
-  // Reset all to defaults
-  const handleResetAllData = async () => {
-    try {
-      await storageService.resetToDefault();
-      window.location.reload();
-    } catch (error) {
-      console.error(error);
-      alert('Không thể khôi phục dữ liệu mặc định trên máy chủ.');
-    }
-  };
-
   return (
     <div className="min-h-screen bg-slate-50 flex flex-col text-slate-800">
       {/* Top Navbar */}
@@ -320,7 +309,6 @@ export default function App({ account, onSignOut }: AppProps) {
                 <SettingsView
                   settings={settings}
                   onUpdateSettings={handleUpdateSettings}
-                  onResetAllData={handleResetAllData}
                 />
               )}
             </div>

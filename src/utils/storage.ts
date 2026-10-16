@@ -1209,42 +1209,6 @@ export const storageService = {
     clearTimeout(timers.get('settings'));
     timers.set('settings', setTimeout(() => flushSettings(), SYNC_DELAY_MS));
   },
-
-  // Export full JSON Backup
-  exportAllDataJSON: () => {
-    const allData = {
-      version: '1.0',
-      exportedAt: new Date().toISOString(),
-      settings: settingsCache,
-      ...cache,
-    };
-    const blob = new Blob([JSON.stringify(allData, null, 2)], { type: 'application/json' });
-    const url = URL.createObjectURL(blob);
-    const a = document.createElement('a');
-    a.href = url;
-    a.download = `EduMate_Backup_${getTodayDateStr()}.json`;
-    a.click();
-    URL.revokeObjectURL(url);
-  },
-
-  // Import full JSON Backup (replaces the data on the server)
-  importAllDataJSON: async (jsonString: string): Promise<boolean> => {
-    try {
-      const data = JSON.parse(jsonString);
-      await flushAll();
-      await apiRequest('/data/import', { method: 'POST', body: JSON.stringify(data) });
-      return true;
-    } catch (error) {
-      console.error('[EduMate] Import failed:', error);
-      return false;
-    }
-  },
-
-  // Reset to Default Mock Data (on the server)
-  resetToDefault: async () => {
-    await flushAll();
-    await apiRequest('/data/reset', { method: 'POST' });
-  },
 };
 
 // ==========================================

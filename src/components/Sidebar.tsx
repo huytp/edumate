@@ -3,7 +3,6 @@ import {
   Award,
   CalendarCheck2,
   Dices,
-  Download,
   FileSpreadsheet,
   Gamepad2,
   HeartHandshake,
@@ -133,18 +132,8 @@ export const Sidebar: React.FC<SidebarProps> = ({
         </nav>
       </div>
 
-      {/* Quick Download Zip & Banner */}
+      {/* Banner */}
       <div className="mt-4 space-y-2.5">
-        <a
-          href="/edumate-source-code.zip"
-          download="edumate-source-code.zip"
-          className="flex w-full items-center justify-center gap-2 rounded-xl bg-gradient-to-r from-emerald-500 to-teal-600 px-3 py-2 text-xs font-bold text-white shadow-xs hover:from-emerald-600 hover:to-teal-700 transition"
-          title="Tải toàn bộ mã nguồn ứng dụng .ZIP"
-        >
-          <Download className="h-4 w-4" />
-          <span>Tải Mã Nguồn (.ZIP)</span>
-        </a>
-
         <div className="rounded-2xl bg-gradient-to-br from-sky-50 to-blue-50/80 p-3 border border-sky-100 text-center">
           <div className="text-lg mb-0.5">🌟</div>
           <p className="text-xs font-bold text-sky-900">

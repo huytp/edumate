@@ -1,7 +1,6 @@
 import React from 'react';
 import {
   Bell,
-  Download,
   GraduationCap,
   HeartHandshake,
   LogOut,
@@ -95,17 +94,6 @@ export const Navbar: React.FC<NavbarProps> = ({
 
       {/* Right Controls */}
       <div className="flex items-center gap-1.5 sm:gap-2.5 shrink-0">
-        {/* Download Zip Code button on desktop */}
-        <a
-          href="/edumate-source-code.zip"
-          download="edumate-source-code.zip"
-          className="hidden lg:inline-flex items-center gap-1.5 rounded-xl border border-emerald-200 bg-emerald-50 px-3 py-1.5 text-xs font-bold text-emerald-800 hover:bg-emerald-100 transition shadow-2xs"
-          title="Tải mã nguồn toàn bộ ứng dụng (.ZIP) về máy tính"
-        >
-          <Download className="h-3.5 w-3.5 text-emerald-600" />
-          <span>Tải Code (.ZIP)</span>
-        </a>
-
         {/* Sound toggle button */}
         <button
           onClick={toggleSound}

@@ -38,10 +38,8 @@
 Ứng dụng gồm giao diện React, máy chủ Ruby on Rails và cơ sở dữ liệu MySQL, tất cả chạy bằng Docker.
 
 1. Cài **Docker Desktop**: [https://www.docker.com/products/docker-desktop](https://www.docker.com/products/docker-desktop)
-2. Giải nén mã nguồn (hoặc `git clone`), mở Terminal tại thư mục dự án và chạy `docker compose up -d --build`
+2. `git clone` mã nguồn, mở Terminal tại thư mục dự án và chạy `docker compose up -d --build`
 3. Mở trình duyệt tại **http://localhost:3000** và đăng nhập bằng tài khoản demo bên dưới (hoặc tự đăng ký)
-
-Gói mã nguồn `.zip` (nút "Tải mã nguồn" trong ứng dụng) được tạo tự động khi build bản production. Muốn tạo ở máy mình thì chạy `npm run package:zip`.
 
 ---
 

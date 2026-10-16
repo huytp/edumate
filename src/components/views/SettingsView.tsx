@@ -2,39 +2,31 @@ import React, { useRef, useState } from 'react';
 import {
   AlertTriangle,
   Code,
-  Download,
   FileCode,
   KeyRound,
   Laptop,
-  PackageCheck,
-  RotateCcw,
   Save,
   Settings,
   ShieldCheck,
-  Smartphone,
   Sparkles,
-  Terminal,
   Upload,
   Volume2,
 } from 'lucide-react';
 import { AppSettings } from '../../types';
 import { soundManager } from '../../utils/audio';
-import { AVATAR_OPTIONS, storageService } from '../../utils/storage';
+import { AVATAR_OPTIONS } from '../../utils/storage';
 
 interface SettingsViewProps {
   settings: AppSettings;
   onUpdateSettings: (settings: AppSettings) => void;
-  onResetAllData: () => void;
 }
 
 export const SettingsView: React.FC<SettingsViewProps> = ({
   settings,
   onUpdateSettings,
-  onResetAllData,
 }) => {
   const [formData, setFormData] = useState<AppSettings>(settings);
   const [isSaved, setIsSaved] = useState(false);
-  const jsonInputRef = useRef<HTMLInputElement>(null);
   const logoUploadRef = useRef<HTMLInputElement>(null);
 
   const handleSubmit = (e: React.FormEvent) => {
@@ -75,24 +67,6 @@ export const SettingsView: React.FC<SettingsViewProps> = ({
   };
 
   // Import JSON Backup
-  const handleImportJSON = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0];
-    if (!file) return;
-    const reader = new FileReader();
-    reader.onload = async () => {
-      const content = reader.result as string;
-      const ok = await storageService.importAllDataJSON(content);
-      if (ok) {
-        soundManager.playSuccess();
-        alert('Khôi phục dữ liệu từ bản sao lưu JSON thành công! Trang sẽ được làm mới.');
-        window.location.reload();
-      } else {
-        alert('File sao lưu JSON không hợp lệ.');
-      }
-    };
-    reader.readAsText(file);
-  };
-
   return (
     <div className="max-w-4xl space-y-6 pb-12 animate-in fade-in duration-300">
       {/* Header */}
@@ -102,7 +76,7 @@ export const SettingsView: React.FC<SettingsViewProps> = ({
           Cài Đặt Hệ Thống EduMate
         </h2>
         <p className="text-xs text-slate-500">
-          Tùy chỉnh thông tin lớp học, ảnh đại diện ứng dụng, hiệu ứng âm thanh và sao lưu dữ liệu
+          Tùy chỉnh thông tin lớp học, ảnh đại diện ứng dụng và hiệu ứng âm thanh
         </p>
       </div>
 
@@ -434,113 +408,6 @@ export const SettingsView: React.FC<SettingsViewProps> = ({
         </div>
       </form>
 
-      {/* SECTION 4: BACKUP & RESTORE */}
-      <div className="rounded-2xl border border-sky-100 bg-white p-6 shadow-xs space-y-4">
-        <h3 className="font-bold text-slate-800 text-sm pb-2 border-b border-slate-100">
-          4. Sao Lưu Dữ Liệu Lớp Học & Khôi Phục
-        </h3>
-        <p className="text-xs text-slate-500 leading-relaxed">
-          Tải toàn bộ dữ liệu học sinh, điểm danh, điểm thi đua và nhận xét ra file JSON để lưu trữ an toàn hoặc chuyển sang máy tính khác:
-        </p>
-
-        <div className="flex flex-wrap gap-3">
-          <button
-            onClick={() => storageService.exportAllDataJSON()}
-            className="inline-flex items-center gap-1.5 rounded-xl border border-slate-200 bg-white px-4 py-2 text-xs font-semibold text-slate-700 hover:bg-slate-50 shadow-xs"
-          >
-            <Download className="h-4 w-4 text-sky-600" />
-            Tải file sao lưu (JSON Backup)
-          </button>
-
-          <button
-            onClick={() => jsonInputRef.current?.click()}
-            className="inline-flex items-center gap-1.5 rounded-xl border border-slate-200 bg-white px-4 py-2 text-xs font-semibold text-slate-700 hover:bg-slate-50 shadow-xs"
-          >
-            <Upload className="h-4 w-4 text-emerald-600" />
-            Khôi phục từ file JSON
-          </button>
-          <input
-            ref={jsonInputRef}
-            type="file"
-            accept=".json"
-            onChange={handleImportJSON}
-            className="hidden"
-          />
-
-          <button
-            onClick={() => {
-              if (
-                window.confirm(
-                  'Bạn có chắc chắn muốn đặt lại dữ liệu về ban đầu (Xóa các chỉnh sửa và khôi phục 12 học sinh mẫu)?'
-                )
-              ) {
-                onResetAllData();
-              }
-            }}
-            className="inline-flex items-center gap-1.5 rounded-xl border border-rose-200 bg-rose-50 px-4 py-2 text-xs font-bold text-rose-700 hover:bg-rose-100 transition ml-auto"
-          >
-            <RotateCcw className="h-4 w-4" />
-            Đặt Lại Dữ Liệu Ban Đầu
-          </button>
-        </div>
-      </div>
-
-      {/* SECTION 5: PACKAGE & DOWNLOAD FULL SOURCE CODE */}
-      <div className="rounded-2xl border border-emerald-200 bg-gradient-to-br from-emerald-50/60 via-white to-teal-50/40 p-6 shadow-xs space-y-5">
-        <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 pb-3 border-b border-emerald-100">
-          <div className="flex items-center gap-3">
-            <div className="flex h-10 w-10 items-center justify-center rounded-2xl bg-emerald-600 text-white shadow-xs">
-              <PackageCheck className="h-5 w-5" />
-            </div>
-            <div>
-              <h3 className="font-extrabold text-slate-800 text-sm sm:text-base">
-                5. Đóng Gói & Tải Mã Nguồn Ứng Dụng (.ZIP)
-              </h3>
-              <p className="text-xs text-slate-500">
-                Toàn bộ mã nguồn của phiên bản đang chạy: giao diện React + TypeScript, máy chủ Ruby on Rails, cơ sở dữ liệu MySQL và cấu hình Docker để cài lên máy chủ của trường.
-              </p>
-            </div>
-          </div>
-
-          <a
-            href="/edumate-source-code.zip"
-            download="edumate-source-code.zip"
-            className="inline-flex items-center justify-center gap-2 rounded-2xl bg-gradient-to-r from-emerald-600 to-teal-600 px-5 py-3 text-xs font-black text-white shadow-md hover:from-emerald-700 hover:to-teal-700 transition active:scale-95 shrink-0"
-          >
-            <Download className="h-4 w-4" />
-            <span>Tải Mã Nguồn (.ZIP)</span>
-          </a>
-        </div>
-
-        {/* Feature Highlights Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 pt-1">
-          {/* Mobile phone optimization card */}
-          <div className="rounded-xl border border-sky-100 bg-white p-4 space-y-2">
-            <div className="flex items-center gap-2 text-sky-700 font-bold text-xs">
-              <Smartphone className="h-4 w-4 text-sky-600" />
-              <span>Tối ưu hiển thị điện thoại di động</span>
-            </div>
-            <p className="text-[11px] text-slate-600 leading-relaxed">
-              Ứng dụng tự động co giãn theo kích thước màn hình điện thoại (Responsive), tích hợp menu trượt (Drawer) và thanh điều hướng cảm ứng phía dưới (Bottom Navigation), bấm là mở ngay.
-            </p>
-          </div>
-
-          {/* Local Run Guide Card */}
-          <div className="rounded-xl border border-slate-200 bg-white p-4 space-y-2">
-            <div className="flex items-center gap-2 text-slate-800 font-bold text-xs">
-              <Terminal className="h-4 w-4 text-slate-600" />
-              <span>Hướng dẫn chạy sau khi tải về</span>
-            </div>
-            <div className="text-[11px] font-mono bg-slate-900 text-emerald-400 p-2.5 rounded-lg space-y-1">
-              <div># 1. Cài Docker Desktop, giải nén file zip</div>
-              <div># 2. Mở thư mục edumate-app và chạy:</div>
-              <div className="text-white font-bold">docker compose up -d --build</div>
-              <div># 3. Mở http://localhost:3000</div>
-              <div># Tài khoản demo: giaovien@edumate.local / 123456</div>
-            </div>
-          </div>
-        </div>
-      </div>
     </div>
   );
 };
