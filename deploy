@@ -1,0 +1,85 @@
+#!/usr/bin/env bash
+# Deploys EduMate to production: pull code, rebuild images (bundle install / npm ci run
+# inside the Docker builds), run migrations, restart containers, then check the app is up.
+#
+#   ./deploy            # from your machine: runs everything on the server over SSH
+#   ./deploy            # or directly on the server, inside /opt/edumate
+#
+# Overridable: DEPLOY_HOST (root@180.93.54.160), DEPLOY_PATH (/opt/edumate),
+#              DEPLOY_BRANCH (main), SSH_KEY (~/.ssh/edumate_deploy)
+set -euo pipefail
+
+DEPLOY_HOST="${DEPLOY_HOST:-root@180.93.54.160}"
+DEPLOY_PATH="${DEPLOY_PATH:-/opt/edumate}"
+DEPLOY_BRANCH="${DEPLOY_BRANCH:-main}"
+SSH_KEY="${SSH_KEY:-$HOME/.ssh/edumate_deploy}"
+
+# Everything below runs on the server.
+remote_deploy() {
+  set -euo pipefail
+  cd "$DEPLOY_PATH"
+  local compose=(docker compose -f docker-compose.prod.yml --env-file .env.production)
+  step() { printf '\n\033[1;34m==> %s\033[0m\n' "$*"; }
+
+  [ -f .env.production ] || { echo "Missing $DEPLOY_PATH/.env.production (see .env.production.example)"; exit 1; }
+
+  step "Pulling $DEPLOY_BRANCH"
+  local before
+  before=$(git rev-parse --short HEAD)
+  git fetch origin "$DEPLOY_BRANCH"
+  git checkout -q "$DEPLOY_BRANCH"
+  git merge --ff-only "origin/$DEPLOY_BRANCH"
+  echo "$before -> $(git rev-parse --short HEAD)"
+  git log --oneline "$before..HEAD" | sed 's/^/   /'
+
+  step "Building images (bundle install, npm ci, vite build)"
+  "${compose[@]}" build
+
+  step "Starting database"
+  "${compose[@]}" up -d --wait db
+
+  step "Running migrations"
+  "${compose[@]}" run --rm --no-deps backend bin/rails db:migrate
+
+  step "Restarting containers"
+  "${compose[@]}" up -d --wait --remove-orphans
+
+  step "Health check"
+  local port
+  port=$(grep -E '^WEB_PORT=' .env.production | cut -d= -f2)
+  port="${port:-8080}"
+  # The page must load and /api must reach Rails (401 = API up, just not logged in).
+  for _ in $(seq 1 20); do
+    if curl -fs -o /dev/null "http://localhost:$port/" &&
+       [ "$(curl -s -o /dev/null -w '%{http_code}' "http://localhost:$port/api/auth/me")" = "401" ]; then
+      "${compose[@]}" ps --format 'table {{.Name}}\t{{.Status}}'
+      printf '\n\033[1;32mDeployed %s — http://%s:%s\033[0m\n' "$(git rev-parse --short HEAD)" "$(hostname -I | awk '{print $1}')" "$port"
+      return 0
+    fi
+    sleep 3
+  done
+  echo "App did not respond on port $port"; "${compose[@]}" logs --tail 50 backend web
+  exit 1
+}
+
+if [ "$(pwd -P)" = "$DEPLOY_PATH" ]; then
+  remote_deploy
+  exit
+fi
+
+# Running from a developer machine: warn about work that would not be deployed.
+if git rev-parse --git-dir >/dev/null 2>&1; then
+  [ -z "$(git status --porcelain)" ] || echo "⚠️  You have uncommitted changes; they will NOT be deployed."
+  if git rev-parse --verify -q "origin/$DEPLOY_BRANCH" >/dev/null; then
+    ahead=$(git rev-list --count "origin/$DEPLOY_BRANCH..$DEPLOY_BRANCH" 2>/dev/null || echo 0)
+    [ "$ahead" = "0" ] || echo "⚠️  $ahead local commit(s) not pushed to origin/$DEPLOY_BRANCH; push first to deploy them."
+  fi
+fi
+
+ssh_opts=(-o BatchMode=yes)
+[ -f "$SSH_KEY" ] && ssh_opts+=(-i "$SSH_KEY")
+
+echo "Deploying to $DEPLOY_HOST:$DEPLOY_PATH"
+ssh "${ssh_opts[@]}" "$DEPLOY_HOST" \
+  "DEPLOY_PATH='$DEPLOY_PATH' DEPLOY_BRANCH='$DEPLOY_BRANCH' bash -s" \
+  <<< "$(declare -f remote_deploy); remote_deploy"
