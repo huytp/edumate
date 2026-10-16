@@ -1,5 +1,5 @@
-# Reads and writes one teacher's classroom in the same JSON shape as the frontend backup file
-# (storageService.exportAllDataJSON), so backups made before the backend existed can be imported.
+# Reads and writes one teacher's classroom in the same JSON shape as the frontend data
+# (the shape of the old JSON backup file, so those backups can still be imported).
 module EdumateData
   # JSON key => model
   COLLECTIONS = {
@@ -41,8 +41,6 @@ module EdumateData
         next unless data[key].is_a?(Array)
 
         records = model.where(teacher: teacher)
-        # Students are re-created, so links must be restored by matching client ids afterwards.
-        linked = model == Student ? ParentLink.joins(:student).where(students: { teacher_id: teacher.id }).pluck(:parent_id, "students.client_id") : []
         records.destroy_all
         data[key].each_with_index do |payload, index|
           record = records.new(client_id: payload["id"].to_s)
@@ -50,7 +48,6 @@ module EdumateData
           record.position = index
           record.save!
         end
-        restore_parent_links(teacher, linked) if linked.any?
       end
     end
   end
@@ -75,13 +72,5 @@ module EdumateData
 
   def teacher_identity(teacher)
     { "teacherName" => teacher.name, "teacherEmail" => teacher.email, "teacherPhone" => teacher.phone.to_s }
-  end
-
-  def restore_parent_links(teacher, links)
-    students = Student.where(teacher: teacher).index_by(&:client_id)
-    links.each do |parent_id, client_id|
-      student = students[client_id]
-      ParentLink.find_or_create_by!(parent_id: parent_id, student: student) if student
-    end
   end
 end

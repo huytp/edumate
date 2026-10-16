@@ -4,7 +4,7 @@ import App from './App.tsx';
 import ParentApp from './ParentApp.tsx';
 import { AuthScreen } from './components/auth/AuthScreen.tsx';
 import './index.css';
-import { Account, authApi, setUnauthorizedHandler } from './utils/api';
+import { Account, authApi, isParentPortal, setUnauthorizedHandler } from './utils/api';
 import { storageService } from './utils/storage';
 
 type BootState =
@@ -24,7 +24,8 @@ const Message = ({ text, onRetry }: { text: string; onRetry?: () => void }) => (
   </div>
 );
 
-// Nobody gets in without an account: guests see the login / register screen.
+// Teachers need an account: guests see the login / register screen.
+// Parents never get here, they use the class link (/phu-huynh, see ParentApp).
 function Root() {
   const [state, setState] = useState<BootState>({ status: 'loading' });
 
@@ -32,7 +33,12 @@ function Root() {
   const enter = useCallback(async (account: Account) => {
     setState({ status: 'loading' });
     try {
-      if (account.role === 'teacher') await storageService.init();
+      // A session left over from a legacy parent account.
+      if (account.role !== 'teacher') {
+        await authApi.logout().catch(() => {});
+        return setState({ status: 'guest' });
+      }
+      await storageService.init();
       setState({ status: 'ready', account });
     } catch (error) {
       console.error(error);
@@ -74,12 +80,8 @@ function Root() {
     case 'guest':
       return <AuthScreen onAuthenticated={enter} />;
     case 'ready':
-      return state.account.role === 'teacher' ? (
-        <App account={state.account} onSignOut={logout} />
-      ) : (
-        <ParentApp account={state.account} onLogout={logout} />
-      );
+      return <App account={state.account} onSignOut={logout} />;
   }
 }
 
-createRoot(document.getElementById('root')!).render(<Root />);
+createRoot(document.getElementById('root')!).render(isParentPortal() ? <ParentApp /> : <Root />);

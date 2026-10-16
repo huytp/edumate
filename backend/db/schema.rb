@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2026_10_16_000001) do
+ActiveRecord::Schema[8.0].define(version: 2026_10_16_000002) do
   create_table "app_settings", charset: "utf8mb4", collation: "utf8mb4_unicode_ci", force: :cascade do |t|
     t.bigint "teacher_id", null: false
     t.string "school_name"
@@ -111,16 +111,6 @@ ActiveRecord::Schema[8.0].define(version: 2026_10_16_000001) do
     t.index ["teacher_id"], name: "index_music_items_on_teacher_id"
   end
 
-  create_table "parent_links", charset: "utf8mb4", collation: "utf8mb4_unicode_ci", force: :cascade do |t|
-    t.bigint "parent_id", null: false
-    t.bigint "student_id", null: false
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
-    t.index ["parent_id", "student_id"], name: "index_parent_links_on_parent_id_and_student_id", unique: true
-    t.index ["parent_id"], name: "index_parent_links_on_parent_id"
-    t.index ["student_id"], name: "index_parent_links_on_student_id"
-  end
-
   create_table "parent_login_logs", charset: "utf8mb4", collation: "utf8mb4_unicode_ci", force: :cascade do |t|
     t.bigint "teacher_id", null: false
     t.string "client_id", limit: 64, null: false
@@ -154,6 +144,18 @@ ActiveRecord::Schema[8.0].define(version: 2026_10_16_000001) do
     t.index ["teacher_id", "client_id"], name: "index_parent_messages_on_teacher_id_and_client_id", unique: true
     t.index ["teacher_id", "student_id"], name: "index_parent_messages_on_teacher_id_and_student_id"
     t.index ["teacher_id"], name: "index_parent_messages_on_teacher_id"
+  end
+
+  create_table "parent_sessions", charset: "utf8mb4", collation: "utf8mb4_unicode_ci", force: :cascade do |t|
+    t.bigint "teacher_id", null: false
+    t.string "student_client_id", limit: 64, null: false
+    t.string "token_digest", null: false
+    t.datetime "expires_at", null: false
+    t.string "user_agent"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["teacher_id"], name: "index_parent_sessions_on_teacher_id"
+    t.index ["token_digest"], name: "index_parent_sessions_on_token_digest", unique: true
   end
 
   create_table "point_histories", charset: "utf8mb4", collation: "utf8mb4_unicode_ci", force: :cascade do |t|
@@ -300,10 +302,9 @@ ActiveRecord::Schema[8.0].define(version: 2026_10_16_000001) do
   add_foreign_key "daily_comments", "users", column: "teacher_id", on_delete: :cascade
   add_foreign_key "interactive_games", "users", column: "teacher_id", on_delete: :cascade
   add_foreign_key "music_items", "users", column: "teacher_id", on_delete: :cascade
-  add_foreign_key "parent_links", "students", on_delete: :cascade
-  add_foreign_key "parent_links", "users", column: "parent_id", on_delete: :cascade
   add_foreign_key "parent_login_logs", "users", column: "teacher_id", on_delete: :cascade
   add_foreign_key "parent_messages", "users", column: "teacher_id", on_delete: :cascade
+  add_foreign_key "parent_sessions", "users", column: "teacher_id", on_delete: :cascade
   add_foreign_key "point_histories", "users", column: "teacher_id", on_delete: :cascade
   add_foreign_key "quiz_questions", "interactive_games", on_delete: :cascade
   add_foreign_key "reward_items", "users", column: "teacher_id", on_delete: :cascade

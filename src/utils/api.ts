@@ -10,7 +10,22 @@ import {
 } from '../types';
 
 const API_BASE = (import.meta.env?.VITE_API_URL || '/api').replace(/\/$/, '');
-const TOKEN_KEY = 'edumate_auth_token';
+
+// Parents open the class link (/phu-huynh?lop=<mã lớp>) and sign in with a student code, no account needed.
+export const PARENT_PORTAL_PATH = '/phu-huynh';
+export const isParentPortal = () => window.location.pathname.replace(/\/$/, '') === PARENT_PORTAL_PATH;
+export const parentPortalUrl = (classCode: string) =>
+  `${window.location.origin}${PARENT_PORTAL_PATH}?lop=${encodeURIComponent(classCode)}`;
+
+// Ready-to-send message (Zalo) with the class link and one student's sign-in details.
+export const parentInviteMessage = (student: Student, settings: AppSettings) =>
+  `Kính gửi phụ huynh em ${student.name} (${settings.className} - ${settings.schoolName}).\n` +
+  `Để xem thông tin học tập của con trên EduMate, phụ huynh mở link: ${parentPortalUrl(settings.classCode ?? '')}\n` +
+  `- Mã học sinh: ${student.code}\n- Mật khẩu: ${student.password}\n` +
+  `- Giáo viên chủ nhiệm: ${settings.teacherName}${settings.teacherPhone ? ` (${settings.teacherPhone})` : ''}`;
+
+// A parent session is kept apart so a teacher can open the parent page in the same browser.
+const TOKEN_KEY = isParentPortal() ? 'edumate_parent_token' : 'edumate_auth_token';
 
 export type AccountRole = 'teacher' | 'parent';
 
@@ -21,16 +36,6 @@ export interface Account {
   email: string;
   phone?: string;
   classCode?: string;
-}
-
-export interface LinkedChild {
-  id: number;
-  name: string;
-  code: string;
-  avatar?: string;
-  className?: string;
-  schoolName?: string;
-  teacherName?: string;
 }
 
 export interface ChildPortalData {
@@ -97,16 +102,21 @@ export const apiRequest = async (path: string, init: RequestInit = {}) => {
   return res.status === 204 ? null : res.json();
 };
 
+const saveToken = (value: string | null) => {
+  token = value;
+  writeToken(value);
+};
+
 const startSession = (data: { token: string; user: Account }) => {
-  token = data.token;
-  writeToken(token);
+  saveToken(data.token);
   return data.user;
 };
 
 export const authApi = {
   hasToken: () => !!token,
 
-  register: async (payload: { role: AccountRole; name: string; email: string; phone?: string; password: string }) =>
+  // Only teachers register; parents sign in with parentApi.login.
+  register: async (payload: { name: string; email: string; phone?: string; password: string }) =>
     startSession(await apiRequest('/auth/register', { method: 'POST', body: JSON.stringify(payload) })),
 
   login: async (email: string, password: string) =>
@@ -118,22 +128,30 @@ export const authApi = {
     try {
       await apiRequest('/auth/logout', { method: 'DELETE' });
     } finally {
-      token = null;
-      writeToken(null);
+      saveToken(null);
     }
   },
 };
 
 export const parentApi = {
-  children: (): Promise<LinkedChild[]> => apiRequest('/parent/children'),
+  login: async (classCode: string, studentCode: string, password: string) => {
+    const data = await apiRequest('/parent/session', {
+      method: 'POST',
+      body: JSON.stringify({ classCode, studentCode, password }),
+    });
+    saveToken(data.token);
+  },
 
-  linkChild: (classCode: string, studentCode: string, password: string): Promise<LinkedChild> =>
-    apiRequest('/parent/children', { method: 'POST', body: JSON.stringify({ classCode, studentCode, password }) }),
+  logout: async () => {
+    try {
+      await apiRequest('/parent/session', { method: 'DELETE' });
+    } finally {
+      saveToken(null);
+    }
+  },
 
-  unlinkChild: (childId: number) => apiRequest(`/parent/children/${childId}`, { method: 'DELETE' }),
+  childData: (): Promise<ChildPortalData> => apiRequest('/parent/child'),
 
-  childData: (childId: number): Promise<ChildPortalData> => apiRequest(`/parent/children/${childId}`),
-
-  sendMessage: (childId: number, content: string): Promise<ParentMessage> =>
-    apiRequest(`/parent/children/${childId}/messages`, { method: 'POST', body: JSON.stringify({ content }) }),
+  sendMessage: (content: string): Promise<ParentMessage> =>
+    apiRequest('/parent/child/messages', { method: 'POST', body: JSON.stringify({ content }) }),
 };

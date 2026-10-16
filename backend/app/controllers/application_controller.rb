@@ -34,10 +34,6 @@ class ApplicationController < ActionController::API
     render json: { error: "Teacher account required" }, status: :forbidden unless current_user.teacher?
   end
 
-  def require_parent!
-    render json: { error: "Parent account required" }, status: :forbidden unless current_user.parent?
-  end
-
   # Reads the raw JSON body so the camelCase payload reaches the models untouched.
   def json_body
     @json_body ||= request.raw_post.present? ? JSON.parse(request.raw_post) : {}

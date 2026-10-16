@@ -23,9 +23,10 @@ Rails.application.routes.draw do
       end
     end
 
-    # Parent: linked children only
+    # Parent: signed in for one student from the class link
     namespace :parent do
-      resources :children, only: %i[index show create destroy] do
+      resource :session, only: %i[create destroy]
+      resource :child, only: :show do
         resources :messages, only: :create
       end
     end

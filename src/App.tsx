@@ -11,6 +11,7 @@ import { AttendanceView } from './components/views/AttendanceView';
 import { Circular27CommentsView } from './components/views/Circular27CommentsView';
 import { InteractiveGamesView } from './components/views/InteractiveGamesView';
 import { OverviewView } from './components/views/OverviewView';
+import { ParentAccessView } from './components/views/ParentAccessView';
 import { ParentChildView } from './components/views/ParentChildView';
 import { ParentPortalAndReportsView } from './components/views/ParentPortalAndReportsView';
 import { PointsRewardsView } from './components/views/PointsRewardsView';
@@ -291,6 +292,14 @@ export default function App({ account, onSignOut }: AppProps) {
                   results={semesterResults}
                   settings={settings}
                   onUpdateResults={handleUpdateSemesterResults}
+                />
+              )}
+
+              {currentTab === 'parent_access' && (
+                <ParentAccessView
+                  students={students}
+                  settings={settings}
+                  onSwitchToParentView={handleSwitchToParentView}
                 />
               )}
 

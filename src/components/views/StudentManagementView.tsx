@@ -16,6 +16,7 @@ import {
   X,
 } from 'lucide-react';
 import { AppSettings, Student } from '../../types';
+import { parentInviteMessage } from '../../utils/api';
 import { soundManager } from '../../utils/audio';
 import {
   AVATAR_OPTIONS,
@@ -213,8 +214,7 @@ export const StudentManagementView: React.FC<StudentManagementViewProps> = ({
 
   // Copy Parent Credentials to clipboard for Zalo sending
   const copyCredentials = (student: Student) => {
-    const text = `Kính gửi phụ huynh em ${student.name} (${settings.className} - ${settings.schoolName}).\nĐể tra cứu học tập của con trên EduMate, phụ huynh vui lòng đăng ký tài khoản Phụ huynh tại ${window.location.origin}, sau đó liên kết với con bằng:\n- Mã lớp: ${settings.classCode}\n- Mã học sinh: ${student.code}\n- Mật khẩu: ${student.password}\n- Giáo viên chủ nhiệm: ${settings.teacherName} (${settings.teacherPhone})`;
-    navigator.clipboard.writeText(text);
+    navigator.clipboard.writeText(parentInviteMessage(student, settings));
     setCopiedId(student.id);
     soundManager.playTick();
     setTimeout(() => setCopiedId(null), 2500);
@@ -614,7 +614,7 @@ export const StudentManagementView: React.FC<StudentManagementViewProps> = ({
                     className="w-full rounded-xl border border-slate-300 bg-white py-1.5 px-3 text-xs font-mono focus:border-sky-500 focus:outline-hidden"
                   />
                   <p className="text-[10px] text-slate-500 mt-1">
-                    Phụ huynh đăng ký tài khoản rồi liên kết với con bằng Mã lớp ({settings.classCode}), Mã học sinh và Mật khẩu này.
+                    Phụ huynh mở link lớp (mục Cổng phụ huynh) rồi đăng nhập bằng Mã học sinh và Mật khẩu này.
                   </p>
                 </div>
               </div>

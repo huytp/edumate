@@ -1,4 +1,5 @@
 class User < ApplicationRecord
+  # "parent" accounts are legacy: parents now sign in per student from the class link (ParentSession).
   ROLES = %w[teacher parent].freeze
 
   has_secure_password
@@ -8,10 +9,7 @@ class User < ApplicationRecord
   # Teacher side: one classroom per account.
   has_one :app_setting, foreign_key: :teacher_id, dependent: :destroy, inverse_of: :teacher
   has_many :students, foreign_key: :teacher_id, inverse_of: :teacher
-
-  # Parent side: linked children.
-  has_many :parent_links, foreign_key: :parent_id, dependent: :delete_all
-  has_many :children, through: :parent_links, source: :student
+  has_many :parent_sessions, foreign_key: :teacher_id, dependent: :delete_all
 
   normalizes :email, with: ->(email) { email.strip.downcase }
 

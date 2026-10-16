@@ -179,5 +179,5 @@ export interface AppSettings {
   speechRate: number;
   speechPitch?: number;
   preferredVoiceURI?: string;
-  classCode?: string; // Mã lớp (read-only, from the teacher account) for parents to link their child
+  classCode?: string; // Mã lớp (read-only, from the teacher account), part of the parent link /phu-huynh?lop=<classCode>
 }

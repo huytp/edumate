@@ -1,20 +1,12 @@
 import React, { useState } from 'react';
 import {
-  Check,
   CheckCircle2,
   Clock,
-  Copy,
   Eye,
   HeartHandshake,
-  KeyRound,
   MessageSquare,
-  Phone,
   Send,
-  ShieldCheck,
-  Smartphone,
   TrendingUp,
-  UserCheck,
-  Users,
 } from 'lucide-react';
 import {
   AppSettings,
@@ -41,9 +33,8 @@ export const ParentPortalAndReportsView: React.FC<ParentPortalAndReportsViewProp
   onUpdateMessages,
   onSwitchToParentView,
 }) => {
-  const [activeTab, setActiveTab] = useState<'messages' | 'logs' | 'credentials'>('messages');
+  const [activeTab, setActiveTab] = useState<'messages' | 'logs'>('messages');
   const [replyTextMap, setReplyTextMap] = useState<Record<string, string>>({});
-  const [copiedId, setCopiedId] = useState<string | null>(null);
 
   // Group login logs by student to calculate total login counts
   const loginStatsByStudent = students.map((student) => {
@@ -80,15 +71,6 @@ export const ParentPortalAndReportsView: React.FC<ParentPortalAndReportsViewProp
     setReplyTextMap((prev) => ({ ...prev, [messageId]: '' }));
   };
 
-  // Copy parent account credentials
-  const copyCredentials = (student: Student) => {
-    const text = `Kính gửi phụ huynh em ${student.name} (${settings.className} - ${settings.schoolName}).\nĐể tra cứu học tập của con trên EduMate, phụ huynh vui lòng đăng ký tài khoản Phụ huynh tại ${window.location.origin}, sau đó liên kết với con bằng:\n- Mã lớp: ${settings.classCode}\n- Mã học sinh: ${student.code}\n- Mật khẩu: ${student.password}\n- Giáo viên chủ nhiệm: ${settings.teacherName} (${settings.teacherPhone})`;
-    navigator.clipboard.writeText(text);
-    setCopiedId(student.id);
-    soundManager.playTick();
-    setTimeout(() => setCopiedId(null), 2500);
-  };
-
   return (
     <div className="space-y-6 animate-in fade-in duration-300">
       {/* Header */}
@@ -98,7 +80,7 @@ export const ParentPortalAndReportsView: React.FC<ParentPortalAndReportsViewProp
           Kết Nối 2 Chiều Phụ Huynh & Báo Cáo
         </h2>
         <p className="text-xs text-slate-500">
-          Theo dõi phụ huynh đăng nhập, phản hồi tin nhắn và cấp tài khoản tra cứu cho từng học sinh
+          Theo dõi phụ huynh đăng nhập và phản hồi tin nhắn của phụ huynh
         </p>
       </div>
 
@@ -126,18 +108,6 @@ export const ParentPortalAndReportsView: React.FC<ParentPortalAndReportsViewProp
         >
           <TrendingUp className="h-4 w-4" />
           Báo Cáo Phụ Huynh Đăng Nhập ({loginLogs.length})
-        </button>
-
-        <button
-          onClick={() => setActiveTab('credentials')}
-          className={`flex items-center gap-2 rounded-xl px-4 py-2 text-xs font-bold transition ${
-            activeTab === 'credentials'
-              ? 'bg-gradient-to-r from-sky-500 to-blue-600 text-white shadow-xs'
-              : 'text-slate-600 hover:text-slate-900'
-          }`}
-        >
-          <KeyRound className="h-4 w-4" />
-          Phiếu Cấp Tài Khoản Phụ Huynh
         </button>
       </div>
 
@@ -342,89 +312,6 @@ export const ParentPortalAndReportsView: React.FC<ParentPortalAndReportsViewProp
         </div>
       )}
 
-      {/* TAB 3: CREDENTIALS CARDS */}
-      {activeTab === 'credentials' && (
-        <div className="space-y-4">
-          <p className="text-xs text-slate-600">
-            Giáo viên có thể bấm "Copy tin nhắn" để gửi nhanh qua Zalo cho từng phụ huynh:
-          </p>
-
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-            {students.map((student) => {
-              const isCopied = copiedId === student.id;
-
-              return (
-                <div
-                  key={student.id}
-                  className="rounded-2xl border border-sky-200 bg-gradient-to-br from-sky-50/40 via-white to-blue-50/20 p-4 shadow-xs flex flex-col justify-between"
-                >
-                  <div>
-                    <div className="flex items-center gap-3 pb-3 border-b border-sky-100">
-                      <span className="text-3xl">{student.avatar}</span>
-                      <div>
-                        <h4 className="font-bold text-slate-800 text-sm">{student.name}</h4>
-                        <span className="text-[11px] text-slate-500">
-                          PH: {student.parentName}
-                        </span>
-                      </div>
-                    </div>
-
-                    <div className="mt-3 space-y-1.5 text-xs rounded-xl bg-white p-3 border border-slate-100 font-mono">
-                      <div className="flex justify-between">
-                        <span className="text-slate-500">Mã lớp:</span>
-                        <span className="font-bold text-indigo-700">{settings.classCode}</span>
-                      </div>
-                      <div className="flex justify-between">
-                        <span className="text-slate-500">Mã học sinh:</span>
-                        <span className="font-bold text-sky-700">{student.code}</span>
-                      </div>
-                      <div className="flex justify-between">
-                        <span className="text-slate-500">Mật khẩu:</span>
-                        <span className="font-bold text-emerald-700">{student.password}</span>
-                      </div>
-                      <div className="flex justify-between">
-                        <span className="text-slate-500">SĐT nhận tin:</span>
-                        <span className="text-slate-700">{student.parentPhone || 'Chưa có'}</span>
-                      </div>
-                    </div>
-                  </div>
-
-                  <div className="mt-4 flex items-center gap-2">
-                    <button
-                      onClick={() => copyCredentials(student)}
-                      className={`flex-1 inline-flex items-center justify-center gap-1.5 rounded-xl py-2 text-xs font-bold transition shadow-xs ${
-                        isCopied
-                          ? 'bg-emerald-600 text-white'
-                          : 'bg-sky-500 text-white hover:bg-sky-600'
-                      }`}
-                    >
-                      {isCopied ? (
-                        <>
-                          <Check className="h-3.5 w-3.5" />
-                          <span>Đã sao chép!</span>
-                        </>
-                      ) : (
-                        <>
-                          <Copy className="h-3.5 w-3.5" />
-                          <span>Copy gửi Zalo</span>
-                        </>
-                      )}
-                    </button>
-
-                    <button
-                      onClick={() => onSwitchToParentView(student)}
-                      className="rounded-xl border border-slate-200 bg-white p-2 text-slate-600 hover:bg-slate-50"
-                      title="Xem thử trang phụ huynh"
-                    >
-                      <Eye className="h-4 w-4" />
-                    </button>
-                  </div>
-                </div>
-              );
-            })}
-          </div>
-        </div>
-      )}
     </div>
   );
 };

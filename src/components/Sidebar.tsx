@@ -10,6 +10,7 @@ import {
   Menu,
   MessageSquareQuote,
   Settings,
+  UserCheck,
   Users,
   X,
 } from 'lucide-react';
@@ -41,6 +42,7 @@ export const teacherNavItems: TabItem[] = [
   { id: 'comments', name: 'Nhận xét Thông tư 27', icon: MessageSquareQuote },
   { id: 'games', name: 'Trò chơi tương tác', icon: Gamepad2 },
   { id: 'semester', name: 'Kết quả cuối kỳ (TT27)', icon: FileSpreadsheet },
+  { id: 'parent_access', name: 'Cổng phụ huynh', icon: UserCheck },
   {
     id: 'parent_portal',
     name: 'Kết nối & Báo cáo PH',

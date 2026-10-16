@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
-import { GraduationCap, HeartHandshake, KeyRound, Loader2, Mail, Phone, User } from 'lucide-react';
-import { Account, AccountRole, authApi } from '../../utils/api';
+import { KeyRound, Loader2, Mail, Phone, User } from 'lucide-react';
+import { Account, authApi } from '../../utils/api';
 
 interface AuthScreenProps {
   onAuthenticated: (account: Account) => void;
@@ -25,7 +25,6 @@ const Field: React.FC<{
 
 export const AuthScreen: React.FC<AuthScreenProps> = ({ onAuthenticated }) => {
   const [mode, setMode] = useState<'login' | 'register'>('login');
-  const [role, setRole] = useState<AccountRole>('teacher');
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [phone, setPhone] = useState('');
@@ -52,7 +51,7 @@ export const AuthScreen: React.FC<AuthScreenProps> = ({ onAuthenticated }) => {
       const account =
         mode === 'login'
           ? await authApi.login(email.trim(), password)
-          : await authApi.register({ role, name: name.trim(), email: email.trim(), phone: phone.trim(), password });
+          : await authApi.register({ name: name.trim(), email: email.trim(), phone: phone.trim(), password });
       onAuthenticated(account);
     } catch (err) {
       const message = err instanceof Error ? err.message : '';
@@ -72,7 +71,7 @@ export const AuthScreen: React.FC<AuthScreenProps> = ({ onAuthenticated }) => {
         <div className="px-6 pt-6 pb-4 text-center">
           <div className="mx-auto mb-3 flex h-12 w-12 items-center justify-center rounded-2xl bg-sky-600 text-2xl">🎒</div>
           <h1 className="text-lg font-extrabold text-slate-800">EduMate</h1>
-          <p className="text-xs text-slate-500">Người bạn đồng hành của giáo viên & phụ huynh</p>
+          <p className="text-xs text-slate-500">Người bạn đồng hành của giáo viên</p>
         </div>
 
         <div className="grid grid-cols-2 mx-6 p-1 gap-1 rounded-xl bg-slate-100">
@@ -93,43 +92,16 @@ export const AuthScreen: React.FC<AuthScreenProps> = ({ onAuthenticated }) => {
         <form onSubmit={handleSubmit} className="p-6 space-y-3">
           {mode === 'register' && (
             <>
-              <div>
-                <span className="block text-xs font-bold text-slate-700 mb-1">Bạn là</span>
-                <div className="grid grid-cols-2 gap-2">
-                  {(
-                    [
-                      { value: 'teacher', label: 'Giáo viên', icon: <GraduationCap className="h-4 w-4 text-sky-600" /> },
-                      { value: 'parent', label: 'Phụ huynh', icon: <HeartHandshake className="h-4 w-4 text-emerald-600" /> },
-                    ] as const
-                  ).map((option) => (
-                    <button
-                      key={option.value}
-                      type="button"
-                      onClick={() => setRole(option.value)}
-                      className={`flex items-center justify-center gap-2 rounded-xl border py-2.5 text-xs font-bold transition ${
-                        role === option.value
-                          ? 'border-sky-400 bg-sky-50 text-sky-800'
-                          : 'border-slate-200 text-slate-600 hover:bg-slate-50'
-                      }`}
-                    >
-                      {option.icon}
-                      {option.label}
-                    </button>
-                  ))}
-                </div>
-                <p className="mt-1.5 text-[11px] text-slate-500">
-                  {role === 'teacher'
-                    ? 'Mỗi tài khoản giáo viên có một lớp học riêng.'
-                    : 'Sau khi đăng ký, nhập Mã lớp, Mã học sinh và Mật khẩu do giáo viên cung cấp để xem thông tin của con.'}
-                </p>
-              </div>
+              <p className="rounded-xl bg-sky-50 px-3 py-2 text-[11px] text-sky-800">
+                Tài khoản dành cho giáo viên, mỗi tài khoản có một lớp học riêng.
+              </p>
 
               <Field icon={<User className="h-4 w-4" />} label="Họ và tên">
                 <input
                   value={name}
                   onChange={(e) => setName(e.target.value)}
                   required
-                  placeholder={role === 'teacher' ? 'Ví dụ: Cô Nguyễn Thị Hoa' : 'Ví dụ: Trần Văn Bình'}
+                  placeholder="Ví dụ: Cô Nguyễn Thị Hoa"
                   className={inputClass}
                 />
               </Field>
@@ -199,6 +171,10 @@ export const AuthScreen: React.FC<AuthScreenProps> = ({ onAuthenticated }) => {
             >
               {mode === 'login' ? 'Đăng ký ngay' : 'Đăng nhập'}
             </button>
+          </p>
+
+          <p className="border-t border-slate-100 pt-3 text-center text-[11px] text-slate-500">
+            Phụ huynh không cần tài khoản: mở link lớp do giáo viên gửi và đăng nhập bằng mã học sinh.
           </p>
         </form>
       </div>

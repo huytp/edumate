@@ -57,18 +57,17 @@ docker compose up -d --build
 | `backend`  | http://localhost:3001/api  | Rails 8 API                             |
 | `db`       | `localhost:3307`           | MySQL 8.4 (user `root` / `edumate_root`) |
 
-Lần chạy đầu, backend tự tạo database, chạy migration và tạo 2 tài khoản demo (chỉ ở môi trường development):
+Lần chạy đầu, backend tự tạo database, chạy migration và tạo tài khoản giáo viên demo (chỉ ở môi trường development):
 
-| Vai trò    | Email                    | Mật khẩu |
+| Vai trò    | Đăng nhập                | Mật khẩu |
 |------------|--------------------------|----------|
 | Giáo viên  | `giaovien@edumate.local` | `123456` |
-| Phụ huynh  | `phuhuynh@edumate.local` | `123456` (đã liên kết với học sinh HS001) |
+| Phụ huynh  | Mở link lớp (mục **Cổng phụ huynh**), mã học sinh `HS001` | `123` |
 
 ### Tài khoản & phân quyền
 
-- Phải **đăng ký rồi đăng nhập** mới vào được ứng dụng (đăng nhập bằng email + mật khẩu, mật khẩu mã hóa bcrypt, phiên đăng nhập 30 ngày).
-- **Giáo viên**: mỗi tài khoản có **một lớp riêng** (dữ liệu tách biệt hoàn toàn) và một **Mã lớp** 6 ký tự (xem trong Cài đặt).
-- **Phụ huynh**: đăng ký tài khoản, sau đó liên kết với con bằng **Mã lớp + Mã học sinh + Mật khẩu học sinh** do giáo viên cung cấp. Phụ huynh chỉ xem được dữ liệu của con mình (không thấy nhận xét riêng tư của giáo viên) và gửi tin nhắn cho giáo viên.
+- **Giáo viên**: phải **đăng ký rồi đăng nhập** (email + mật khẩu, mật khẩu mã hóa bcrypt, phiên đăng nhập 30 ngày). Mỗi tài khoản có **một lớp riêng** (dữ liệu tách biệt hoàn toàn) và một **Mã lớp** 6 ký tự.
+- **Phụ huynh**: không cần tài khoản. Giáo viên gửi link lớp `/phu-huynh?lop=<Mã lớp>` (hoặc mã QR) trong mục **Cổng phụ huynh**, phụ huynh đăng nhập bằng **Mã học sinh + Mật khẩu học sinh**. Phụ huynh chỉ xem được dữ liệu của con mình (không thấy nhận xét riêng tư của giáo viên) và gửi tin nhắn cho giáo viên.
 
 Các lệnh hữu ích:
 
@@ -84,9 +83,9 @@ docker compose down -v                           # dừng và XÓA toàn bộ d�
 
 Mọi API (trừ đăng ký/đăng nhập) cần header `Authorization: Bearer <token>`.
 
-- `POST /api/auth/register` `{ role, name, email, phone, password }`, `POST /api/auth/login` `{ email, password }` → `{ token, user }`
+- `POST /api/auth/register` `{ name, email, phone, password }` (chỉ giáo viên), `POST /api/auth/login` `{ email, password }` → `{ token, user }`
 - `DELETE /api/auth/logout`, `GET /api/auth/me`
-- Phụ huynh: `GET|POST /api/parent/children` (danh sách / liên kết con), `GET /api/parent/children/:id` (dữ liệu của con), `POST /api/parent/children/:id/messages`
+- Phụ huynh: `POST /api/parent/session` `{ classCode, studentCode, password }` → `{ token }`, `DELETE /api/parent/session`, `GET /api/parent/child` (dữ liệu của con), `POST /api/parent/child/messages` `{ content }`
 
 Giáo viên (dữ liệu lớp của chính mình):
 

@@ -1,56 +1,173 @@
 import React, { useCallback, useEffect, useState } from 'react';
-import { ArrowLeft, KeyRound, Link2, Loader2, LogOut, School, User } from 'lucide-react';
+import { GraduationCap, Loader2, Lock } from 'lucide-react';
 import { ParentChildView } from './components/views/ParentChildView';
 import { AppSettings, ParentMessage } from './types';
-import { Account, ChildPortalData, LinkedChild, parentApi } from './utils/api';
+import { authApi, ChildPortalData, parentApi, setUnauthorizedHandler } from './utils/api';
 import { soundManager } from './utils/audio';
 import { DEFAULT_SETTINGS } from './utils/storage';
 
-interface ParentAppProps {
-  account: Account;
-  onLogout: () => void;
-}
+type PortalState =
+  | { status: 'loading' }
+  | { status: 'guest' }
+  | { status: 'error' }
+  | { status: 'ready'; portal: ChildPortalData };
 
 const inputClass =
-  'w-full rounded-xl border border-slate-300 py-2.5 pl-9 pr-3 text-sm focus:border-emerald-500 focus:outline-hidden focus:ring-2 focus:ring-emerald-200';
+  'w-full rounded-xl border border-slate-200 bg-white px-4 py-3 text-sm font-semibold text-slate-800 placeholder:font-medium placeholder:text-slate-400 focus:border-indigo-400 focus:outline-hidden focus:ring-4 focus:ring-indigo-100';
 
-// Parent accounts: link children with the codes handed out by the teacher, then view each child's portal.
-export default function ParentApp({ account, onLogout }: ParentAppProps) {
-  const [children, setChildren] = useState<LinkedChild[] | null>(null);
-  const [activeChild, setActiveChild] = useState<LinkedChild | null>(null);
-  const [portal, setPortal] = useState<ChildPortalData | null>(null);
-  const [loadError, setLoadError] = useState('');
+const Header: React.FC = () => (
+  <header className="border-b border-slate-200 bg-white">
+    <div className="mx-auto flex max-w-6xl items-center gap-3 px-4 py-3 sm:px-6">
+      <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-indigo-600 text-white">
+        <GraduationCap className="h-5 w-5" />
+      </div>
+      <div>
+        <div className="text-sm font-bold text-slate-800">EduMate</div>
+        <div className="text-xs text-slate-500">Cổng thông tin phụ huynh</div>
+      </div>
+    </div>
+  </header>
+);
 
-  const [classCode, setClassCode] = useState('');
+// The class code comes from the link the teacher shares (?lop=); it is asked for only when missing.
+const LoginScreen: React.FC<{ onSignedIn: () => void }> = ({ onSignedIn }) => {
+  const linkClassCode = new URLSearchParams(window.location.search).get('lop')?.trim() ?? '';
+  const [classCode, setClassCode] = useState(linkClassCode);
   const [studentCode, setStudentCode] = useState('');
-  const [studentPassword, setStudentPassword] = useState('');
-  const [linkError, setLinkError] = useState('');
-  const [linking, setLinking] = useState(false);
+  const [password, setPassword] = useState('');
+  const [error, setError] = useState('');
+  const [submitting, setSubmitting] = useState(false);
 
-  const openChild = useCallback(async (child: LinkedChild) => {
-    setActiveChild(child);
-    setPortal(null);
-    setLoadError('');
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setError('');
+    setSubmitting(true);
     try {
-      setPortal(await parentApi.childData(child.id));
+      await parentApi.login(classCode.trim(), studentCode.trim(), password.trim());
+      soundManager.playSuccess();
+      onSignedIn();
     } catch (err) {
-      setLoadError(err instanceof Error ? err.message : 'Không tải được dữ liệu.');
+      setError(err instanceof Error ? err.message : 'Không kết nối được máy chủ. Vui lòng thử lại.');
+      setSubmitting(false);
+    }
+  };
+
+  return (
+    <div className="min-h-screen bg-slate-100/70 text-slate-800">
+      <Header />
+      <main className="mx-auto grid max-w-6xl items-center gap-10 px-4 py-10 sm:px-6 md:grid-cols-2 md:py-20">
+        <section className="space-y-6">
+          <span className="inline-block rounded-full bg-indigo-100 px-3 py-1.5 text-xs font-bold text-indigo-700">
+            Theo dõi hành trình học tập của con
+          </span>
+          <h1 className="text-4xl font-black leading-tight tracking-tight text-slate-900 sm:text-5xl">
+            Mỗi ngày đến lớp, phụ huynh đều nắm rõ.
+          </h1>
+          <p className="text-base leading-relaxed text-slate-600">
+            Xem nhận xét của giáo viên, điểm danh, điểm thưởng và kết quả trò chơi của riêng con. Thông tin được cập nhật
+            từ lớp học của giáo viên.
+          </p>
+          <div className="flex flex-wrap gap-2">
+            {['Nhận xét hàng ngày', 'Chuyên cần', 'Điểm thưởng'].map((label) => (
+              <span key={label} className="rounded-xl bg-white px-3 py-2 text-xs font-bold text-indigo-700 shadow-xs">
+                ✦ {label}
+              </span>
+            ))}
+          </div>
+        </section>
+
+        <form
+          onSubmit={handleSubmit}
+          className="space-y-5 rounded-3xl border border-slate-100 bg-white p-6 shadow-xl shadow-indigo-100/60 sm:p-8"
+        >
+          <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-indigo-50 text-indigo-600">
+            <Lock className="h-5 w-5" />
+          </div>
+          <div>
+            <h2 className="text-xl font-extrabold text-slate-900">Xem thông tin của con</h2>
+            <p className="mt-1 text-sm text-slate-500">Nhập mã học sinh và mật khẩu giáo viên đã cung cấp.</p>
+          </div>
+
+          {!linkClassCode && (
+            <label className="block space-y-2">
+              <span className="text-sm font-bold text-slate-800">Mã lớp</span>
+              <input
+                value={classCode}
+                onChange={(e) => setClassCode(e.target.value)}
+                required
+                placeholder="Mã lớp (6 ký tự)"
+                className={`${inputClass} uppercase placeholder:normal-case`}
+              />
+            </label>
+          )}
+
+          <label className="block space-y-2">
+            <span className="text-sm font-bold text-slate-800">Mã học sinh</span>
+            <input
+              value={studentCode}
+              onChange={(e) => setStudentCode(e.target.value)}
+              required
+              autoComplete="username"
+              placeholder="Ví dụ: HS001"
+              className={`${inputClass} uppercase placeholder:normal-case`}
+            />
+          </label>
+
+          <label className="block space-y-2">
+            <span className="text-sm font-bold text-slate-800">Mật khẩu</span>
+            <input
+              type="password"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              required
+              autoComplete="current-password"
+              placeholder="Mật khẩu do giáo viên cấp"
+              className={inputClass}
+            />
+          </label>
+
+          {error && <p className="text-sm font-medium text-rose-600">{error}</p>}
+
+          <button
+            type="submit"
+            disabled={submitting}
+            className="flex w-full items-center justify-center gap-2 rounded-xl bg-indigo-600 py-3.5 text-base font-bold text-white transition hover:bg-indigo-700 disabled:opacity-60"
+          >
+            {submitting && <Loader2 className="h-4 w-4 animate-spin" />}
+            Xem kết quả học tập
+          </button>
+        </form>
+      </main>
+    </div>
+  );
+};
+
+// Parent page (/phu-huynh): sign in with the student's code and password, then see that child's portal.
+export default function ParentApp() {
+  const [state, setState] = useState<PortalState>(() =>
+    authApi.hasToken() ? { status: 'loading' } : { status: 'guest' }
+  );
+
+  const load = useCallback(async () => {
+    setState({ status: 'loading' });
+    try {
+      setState({ status: 'ready', portal: await parentApi.childData() });
+    } catch (error) {
+      console.error(error);
+      setState(authApi.hasToken() ? { status: 'error' } : { status: 'guest' });
     }
   }, []);
 
   useEffect(() => {
-    parentApi
-      .children()
-      .then((list) => {
-        setChildren(list);
-        if (list.length === 1) openChild(list[0]);
-      })
-      .catch(() => setLoadError('Không tải được danh sách con. Vui lòng thử lại.'));
-  }, [openChild]);
+    setUnauthorizedHandler(() => setState({ status: 'guest' }));
+    if (authApi.hasToken()) load();
+  }, [load]);
 
+  const portal = state.status === 'ready' ? state.portal : null;
   const settings: AppSettings = { ...DEFAULT_SETTINGS, ...portal?.settings };
 
   useEffect(() => {
+    if (!portal) return;
     soundManager.setEnabled(
       settings.soundEffectsEnabled,
       settings.speechEnabled,
@@ -60,190 +177,57 @@ export default function ParentApp({ account, onLogout }: ParentAppProps) {
     );
   }, [portal]); // eslint-disable-line react-hooks/exhaustive-deps
 
-  const handleLink = async (e: React.FormEvent) => {
-    e.preventDefault();
-    setLinkError('');
-    setLinking(true);
-    try {
-      const child = await parentApi.linkChild(classCode.trim(), studentCode.trim(), studentPassword.trim());
-      setChildren((prev) => [...(prev ?? []).filter((c) => c.id !== child.id), child]);
-      setClassCode('');
-      setStudentCode('');
-      setStudentPassword('');
-      soundManager.playSuccess();
-      openChild(child);
-    } catch (err) {
-      setLinkError(err instanceof Error ? err.message : 'Không liên kết được.');
-    } finally {
-      setLinking(false);
-    }
+  const logout = async () => {
+    await parentApi.logout().catch(() => {});
+    setState({ status: 'guest' });
   };
 
   // The view builds the whole message; the server only takes the content and fills in the rest.
   const handleSendMessage = async (msg: ParentMessage) => {
-    if (!activeChild) return;
     try {
-      const saved = await parentApi.sendMessage(activeChild.id, msg.content);
-      setPortal((prev) => (prev ? { ...prev, messages: [saved, ...prev.messages] } : prev));
+      const saved = await parentApi.sendMessage(msg.content);
+      setState((prev) =>
+        prev.status === 'ready' ? { ...prev, portal: { ...prev.portal, messages: [saved, ...prev.portal.messages] } } : prev
+      );
     } catch {
       alert('Gửi tin nhắn thất bại. Vui lòng thử lại.');
     }
   };
 
-  if (activeChild) {
-    return (
-      <div className="min-h-screen bg-slate-50 text-slate-800">
-        <header className="sticky top-0 z-30 flex items-center justify-between border-b border-slate-200 bg-white/90 px-4 py-2.5 backdrop-blur">
-          <button
-            onClick={() => {
-              setActiveChild(null);
-              setPortal(null);
-            }}
-            className="flex items-center gap-1.5 rounded-lg px-2 py-1.5 text-xs font-bold text-slate-600 hover:bg-slate-100"
-          >
-            <ArrowLeft className="h-4 w-4" />
-            Danh sách con
-          </button>
-          <span className="text-xs text-slate-500 truncate">{account.name}</span>
-        </header>
-        <main className="mx-auto max-w-5xl p-4">
-          {portal ? (
-            <ParentChildView
-              student={portal.student}
-              allAttendance={portal.attendance}
-              allComments={portal.comments}
-              allResults={portal.semesterResults}
-              allMessages={portal.messages}
-              allPointsHistory={portal.pointsHistory}
-              allRedemptions={portal.redemptions}
-              settings={settings}
-              onSendMessage={handleSendMessage}
-              onLogout={onLogout}
-            />
-          ) : (
-            <div className="flex flex-col items-center gap-3 py-20 text-sm text-slate-500">
-              {loadError ? (
-                <>
-                  <p className="font-semibold text-rose-600">{loadError}</p>
-                  <button onClick={() => openChild(activeChild)} className="rounded-lg bg-emerald-600 px-4 py-2 font-bold text-white">
-                    Thử lại
-                  </button>
-                </>
-              ) : (
-                <Loader2 className="h-6 w-6 animate-spin text-emerald-600" />
-              )}
-            </div>
-          )}
-        </main>
-      </div>
-    );
-  }
+  if (state.status === 'guest') return <LoginScreen onSignedIn={load} />;
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-emerald-50 via-white to-sky-50 p-4">
-      <div className="mx-auto max-w-lg space-y-4 pt-6">
-        <div className="flex items-center justify-between">
-          <div>
-            <h1 className="text-lg font-extrabold text-slate-800">Xin chào, {account.name}</h1>
-            <p className="text-xs text-slate-500">Cổng thông tin phụ huynh EduMate</p>
-          </div>
-          <button
-            onClick={onLogout}
-            className="flex items-center gap-1.5 rounded-lg border border-rose-200 bg-rose-50 px-3 py-1.5 text-xs font-bold text-rose-700 hover:bg-rose-100"
-          >
-            <LogOut className="h-3.5 w-3.5" />
-            Đăng xuất
-          </button>
-        </div>
-
-        {children === null ? (
-          <div className="flex justify-center py-10">
-            {loadError ? (
-              <p className="text-sm font-semibold text-rose-600">{loadError}</p>
+    <div className="min-h-screen bg-slate-50 text-slate-800">
+      <Header />
+      <main className="mx-auto max-w-5xl p-4">
+        {portal ? (
+          <ParentChildView
+            student={portal.student}
+            allAttendance={portal.attendance}
+            allComments={portal.comments}
+            allResults={portal.semesterResults}
+            allMessages={portal.messages}
+            allPointsHistory={portal.pointsHistory}
+            allRedemptions={portal.redemptions}
+            settings={settings}
+            onSendMessage={handleSendMessage}
+            onLogout={logout}
+          />
+        ) : (
+          <div className="flex flex-col items-center gap-3 py-20 text-sm text-slate-500">
+            {state.status === 'error' ? (
+              <>
+                <p className="font-semibold text-rose-600">Không tải được dữ liệu. Vui lòng thử lại.</p>
+                <button onClick={load} className="rounded-lg bg-indigo-600 px-4 py-2 font-bold text-white">
+                  Thử lại
+                </button>
+              </>
             ) : (
-              <Loader2 className="h-6 w-6 animate-spin text-emerald-600" />
+              <Loader2 className="h-6 w-6 animate-spin text-indigo-600" />
             )}
           </div>
-        ) : (
-          children.length > 0 && (
-            <div className="rounded-2xl border border-emerald-100 bg-white p-4 shadow-xs space-y-2">
-              <h2 className="text-sm font-bold text-slate-800">Con của bạn</h2>
-              {children.map((child) => (
-                <button
-                  key={child.id}
-                  onClick={() => openChild(child)}
-                  className="flex w-full items-center gap-3 rounded-xl border border-slate-100 bg-slate-50/70 p-3 text-left transition hover:border-emerald-200 hover:bg-emerald-50"
-                >
-                  {child.avatar?.startsWith('data:') ? (
-                    <img src={child.avatar} alt="" className="h-9 w-9 rounded-full object-cover" />
-                  ) : (
-                    <span className="text-2xl">{child.avatar || '🧒'}</span>
-                  )}
-                  <div className="min-w-0">
-                    <div className="text-sm font-bold text-slate-800">{child.name}</div>
-                    <div className="text-[11px] text-slate-500 truncate">
-                      {child.code} • {child.className} • {child.schoolName}
-                    </div>
-                  </div>
-                </button>
-              ))}
-            </div>
-          )
         )}
-
-        <form onSubmit={handleLink} className="rounded-2xl border border-sky-100 bg-white p-4 shadow-xs space-y-3">
-          <div>
-            <h2 className="flex items-center gap-1.5 text-sm font-bold text-slate-800">
-              <Link2 className="h-4 w-4 text-sky-600" />
-              {children?.length ? 'Liên kết thêm con' : 'Liên kết với con của bạn'}
-            </h2>
-            <p className="text-[11px] text-slate-500">Nhập các thông tin do giáo viên chủ nhiệm cung cấp.</p>
-          </div>
-
-          <div className="relative">
-            <School className="absolute left-3 top-3 h-4 w-4 text-slate-400" />
-            <input
-              value={classCode}
-              onChange={(e) => setClassCode(e.target.value)}
-              required
-              placeholder="Mã lớp (6 ký tự)"
-              className={`${inputClass} uppercase placeholder:normal-case`}
-            />
-          </div>
-          <div className="relative">
-            <User className="absolute left-3 top-3 h-4 w-4 text-slate-400" />
-            <input
-              value={studentCode}
-              onChange={(e) => setStudentCode(e.target.value)}
-              required
-              placeholder="Mã học sinh, ví dụ HS001"
-              className={`${inputClass} uppercase placeholder:normal-case`}
-            />
-          </div>
-          <div className="relative">
-            <KeyRound className="absolute left-3 top-3 h-4 w-4 text-slate-400" />
-            <input
-              type="password"
-              value={studentPassword}
-              onChange={(e) => setStudentPassword(e.target.value)}
-              required
-              placeholder="Mật khẩu học sinh"
-              className={inputClass}
-            />
-          </div>
-
-          {linkError && <p className="text-xs font-medium text-rose-600">{linkError}</p>}
-
-          <button
-            type="submit"
-            disabled={linking}
-            className="flex w-full items-center justify-center gap-2 rounded-xl bg-gradient-to-r from-emerald-500 to-teal-600 py-2.5 text-sm font-bold text-white shadow-sm hover:from-emerald-600 hover:to-teal-700 disabled:opacity-60"
-          >
-            {linking && <Loader2 className="h-4 w-4 animate-spin" />}
-            Liên kết
-          </button>
-        </form>
-      </div>
+      </main>
     </div>
   );
 }

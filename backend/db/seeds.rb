@@ -1,4 +1,5 @@
-# Development only: a demo teacher with the sample class and a demo parent linked to one child.
+# Development only: a demo teacher with the sample class. Parents sign in from the class link
+# (/phu-huynh?lop=<mã lớp>) with a student code and password, e.g. HS001 / 123.
 # The sample class itself lives in db/seeds/default_data.json
 # (regenerate it from the frontend defaults with: npx tsx scripts/export_seed_data.ts).
 return unless Rails.env.development?
@@ -10,10 +11,3 @@ if teacher.new_record?
   puts "Demo teacher: giaovien@edumate.local / 123456 (mã lớp #{teacher.class_code})"
 end
 
-parent = User.find_or_initialize_by(email: "phuhuynh@edumate.local")
-if parent.new_record?
-  parent.update!(role: "parent", name: "Phụ huynh demo", phone: "0987654321", password: "123456")
-  child = teacher.students.order(:position).first
-  ParentLink.create!(parent: parent, student: child) if child
-  puts "Demo parent: phuhuynh@edumate.local / 123456"
-end

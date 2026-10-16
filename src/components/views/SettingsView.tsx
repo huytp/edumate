@@ -155,7 +155,7 @@ export const SettingsView: React.FC<SettingsViewProps> = ({
 
             <div>
               <label className="block text-xs font-bold text-slate-700 mb-1">
-                Mã lớp (gửi cho phụ huynh để liên kết tài khoản)
+                Mã lớp (nằm trong link lớp gửi phụ huynh ở mục Cổng phụ huynh)
               </label>
               <input
                 type="text"

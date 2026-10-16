@@ -6,12 +6,12 @@ module Api
     rate_limit to: 10, within: 1.minute, only: %i[register login], store: RATE_LIMIT_STORE,
       with: -> { render json: { error: "Too many attempts, please try again later" }, status: :too_many_requests }
 
-    # { role: "teacher" | "parent", name, email, phone, password }
+    # { name, email, phone, password }: only teachers have accounts, parents sign in from the class link.
     def register
-      user = User.new(json_body.slice("role", "name", "email", "phone", "password"))
+      user = User.new(json_body.slice("name", "email", "phone", "password").merge("role" => "teacher"))
       User.transaction do
         user.save!
-        EdumateData.setup_classroom!(user) if user.teacher?
+        EdumateData.setup_classroom!(user)
       end
       render json: session_payload(user), status: :created
     end
@@ -20,6 +20,9 @@ module Api
     def login
       user = User.authenticate_by(email: json_body["email"].to_s.strip.downcase, password: json_body["password"].to_s)
       return render json: { error: "Email hoặc mật khẩu không đúng" }, status: :unauthorized unless user
+      if user.parent?
+        return render json: { error: "Tài khoản phụ huynh không còn dùng. Vui lòng mở link lớp do giáo viên gửi và đăng nhập bằng mã học sinh." }, status: :unauthorized
+      end
 
       render json: session_payload(user)
     end
