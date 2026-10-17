@@ -362,7 +362,7 @@ export const ParentChildView: React.FC<ParentChildViewProps> = ({
 
                 <div className="rounded-full bg-emerald-100 px-3.5 py-1 text-xs font-black text-emerald-800 flex items-center gap-1.5">
                   <Award className="h-4 w-4 text-emerald-600" />
-                  {res.awardTitle}
+                  {res.awardTitle || 'Chưa xếp loại'}
                 </div>
               </div>
 
@@ -375,9 +375,9 @@ export const ParentChildView: React.FC<ParentChildViewProps> = ({
                   <div className="rounded-xl bg-sky-50/70 p-3 border border-sky-100">
                     <span className="text-xs font-bold text-slate-700 block">Toán</span>
                     <div className="mt-1 flex items-baseline gap-2">
-                      <span className="text-xl font-black text-sky-700">{res.mathScore}</span>
+                      <span className="text-xl font-black text-sky-700">{res.mathScore ?? '—'}</span>
                       <span className="text-xs font-semibold text-sky-600">
-                        (Mức {res.mathLevel})
+                        (Mức {res.mathLevel || '—'})
                       </span>
                     </div>
                   </div>
@@ -385,9 +385,9 @@ export const ParentChildView: React.FC<ParentChildViewProps> = ({
                   <div className="rounded-xl bg-sky-50/70 p-3 border border-sky-100">
                     <span className="text-xs font-bold text-slate-700 block">Tiếng Việt</span>
                     <div className="mt-1 flex items-baseline gap-2">
-                      <span className="text-xl font-black text-sky-700">{res.vietnameseScore}</span>
+                      <span className="text-xl font-black text-sky-700">{res.vietnameseScore ?? '—'}</span>
                       <span className="text-xs font-semibold text-sky-600">
-                        (Mức {res.vietnameseLevel})
+                        (Mức {res.vietnameseLevel || '—'})
                       </span>
                     </div>
                   </div>
@@ -395,9 +395,9 @@ export const ParentChildView: React.FC<ParentChildViewProps> = ({
                   <div className="rounded-xl bg-sky-50/70 p-3 border border-sky-100">
                     <span className="text-xs font-bold text-slate-700 block">Tiếng Anh</span>
                     <div className="mt-1 flex items-baseline gap-2">
-                      <span className="text-xl font-black text-sky-700">{res.englishScore}</span>
+                      <span className="text-xl font-black text-sky-700">{res.englishScore ?? '—'}</span>
                       <span className="text-xs font-semibold text-sky-600">
-                        (Mức {res.englishLevel})
+                        (Mức {res.englishLevel || '—'})
                       </span>
                     </div>
                   </div>

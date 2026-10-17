@@ -79,32 +79,32 @@ export interface SemesterResult {
   
   // Môn học & Điểm kiểm tra định kỳ (Theo TT 27)
   mathScore?: number;
-  mathLevel: SubjectEvaluationLevel;
+  mathLevel: SubjectEvaluationLevel | '';
   vietnameseScore?: number;
-  vietnameseLevel: SubjectEvaluationLevel;
+  vietnameseLevel: SubjectEvaluationLevel | '';
   englishScore?: number;
-  englishLevel: SubjectEvaluationLevel;
-  scienceLevel: SubjectEvaluationLevel;
-  historyGeoLevel: SubjectEvaluationLevel;
-  ethicsLevel: SubjectEvaluationLevel;
-  musicLevel: SubjectEvaluationLevel;
-  artLevel: SubjectEvaluationLevel;
-  peLevel: SubjectEvaluationLevel;
+  englishLevel: SubjectEvaluationLevel | '';
+  scienceLevel: SubjectEvaluationLevel | '';
+  historyGeoLevel: SubjectEvaluationLevel | '';
+  ethicsLevel: SubjectEvaluationLevel | '';
+  musicLevel: SubjectEvaluationLevel | '';
+  artLevel: SubjectEvaluationLevel | '';
+  peLevel: SubjectEvaluationLevel | '';
 
   // Năng lực cốt lõi
-  selfAutonomy: SubjectEvaluationLevel; // Tự chủ và tự học
-  communication: SubjectEvaluationLevel; // Giao tiếp và hợp tác
-  problemSolving: SubjectEvaluationLevel; // Giải quyết vấn đề và sáng tạo
+  selfAutonomy: SubjectEvaluationLevel | ''; // Tự chủ và tự học
+  communication: SubjectEvaluationLevel | ''; // Giao tiếp và hợp tác
+  problemSolving: SubjectEvaluationLevel | ''; // Giải quyết vấn đề và sáng tạo
 
   // Phẩm chất chủ yếu
-  patriotism: QualityEvaluationLevel; // Yêu nước
-  compassion: QualityEvaluationLevel; // Nhân ái
-  diligence: QualityEvaluationLevel; // Chăm chỉ
-  honesty: QualityEvaluationLevel; // Trung thực
-  responsibility: QualityEvaluationLevel; // Trách nhiệm
+  patriotism: QualityEvaluationLevel | ''; // Yêu nước
+  compassion: QualityEvaluationLevel | ''; // Nhân ái
+  diligence: QualityEvaluationLevel | ''; // Chăm chỉ
+  honesty: QualityEvaluationLevel | ''; // Trung thực
+  responsibility: QualityEvaluationLevel | ''; // Trách nhiệm
 
   // Khen thưởng & Nhận xét chung
-  awardTitle: 'Học sinh Xuất sắc' | 'Học sinh Tiêu biểu hoàn thành tốt' | 'Hoàn thành chương trình lớp học' | 'Chưa hoàn thành';
+  awardTitle: 'Học sinh Xuất sắc' | 'Học sinh Tiêu biểu hoàn thành tốt' | 'Hoàn thành chương trình lớp học' | 'Chưa hoàn thành' | '';
   overallComment: string;
 }
 

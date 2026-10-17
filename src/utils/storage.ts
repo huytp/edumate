@@ -1275,25 +1275,25 @@ export const exportSemesterResultsToExcel = (
       'Mã HS': s.code,
       'Họ và tên': s.name,
       'Điểm KTĐK Toán': res?.mathScore ?? '',
-      'Mức đạt Toán (T/H/C)': res?.mathLevel ?? 'H',
+      'Mức đạt Toán (T/H/C)': res?.mathLevel || '',
       'Điểm KTĐK T.Việt': res?.vietnameseScore ?? '',
-      'Mức đạt T.Việt (T/H/C)': res?.vietnameseLevel ?? 'H',
+      'Mức đạt T.Việt (T/H/C)': res?.vietnameseLevel || '',
       'Điểm KTĐK T.Anh': res?.englishScore ?? '',
-      'Mức đạt T.Anh (T/H/C)': res?.englishLevel ?? 'H',
-      'Tự nhiên & Xã hội': res?.scienceLevel ?? 'H',
-      'Đạo đức': res?.ethicsLevel ?? 'T',
-      'Âm nhạc': res?.musicLevel ?? 'T',
-      'Mĩ thuật': res?.artLevel ?? 'T',
-      'Giáo dục thể chất': res?.peLevel ?? 'T',
-      'NL Tự chủ & Tự học': res?.selfAutonomy ?? 'T',
-      'NL Giao tiếp & Hợp tác': res?.communication ?? 'T',
-      'NL Giải quyết vấn đề': res?.problemSolving ?? 'T',
-      'PC Yêu nước (T/Đ/C)': res?.patriotism ?? 'T',
-      'PC Nhân ái (T/Đ/C)': res?.compassion ?? 'T',
-      'PC Chăm chỉ (T/Đ/C)': res?.diligence ?? 'T',
-      'PC Trung thực (T/Đ/C)': res?.honesty ?? 'T',
-      'PC Trách nhiệm (T/Đ/C)': res?.responsibility ?? 'T',
-      'Danh hiệu khen thưởng': res?.awardTitle ?? 'Hoàn thành chương trình lớp học',
+      'Mức đạt T.Anh (T/H/C)': res?.englishLevel || '',
+      'Tự nhiên & Xã hội': res?.scienceLevel || '',
+      'Đạo đức': res?.ethicsLevel || '',
+      'Âm nhạc': res?.musicLevel || '',
+      'Mĩ thuật': res?.artLevel || '',
+      'Giáo dục thể chất': res?.peLevel || '',
+      'NL Tự chủ & Tự học': res?.selfAutonomy || '',
+      'NL Giao tiếp & Hợp tác': res?.communication || '',
+      'NL Giải quyết vấn đề': res?.problemSolving || '',
+      'PC Yêu nước (T/Đ/C)': res?.patriotism || '',
+      'PC Nhân ái (T/Đ/C)': res?.compassion || '',
+      'PC Chăm chỉ (T/Đ/C)': res?.diligence || '',
+      'PC Trung thực (T/Đ/C)': res?.honesty || '',
+      'PC Trách nhiệm (T/Đ/C)': res?.responsibility || '',
+      'Danh hiệu khen thưởng': res?.awardTitle || '',
       'Nhận xét chung': res?.overallComment ?? '',
     };
   });
@@ -1311,6 +1311,9 @@ export const exportSemesterResultsToWord = (
   settings: AppSettings,
   semester: string = 'Học kỳ 1'
 ) => {
+  const fmtScoreLevel = (score?: number, level?: string) =>
+    [score ?? '', level ? `(${level})` : ''].filter((x) => x !== '').join(' ');
+
   const tableRows = students
     .map((s, idx) => {
       const res = results.find((r) => r.studentId === s.id);
@@ -1319,14 +1322,14 @@ export const exportSemesterResultsToWord = (
         <td style="text-align: center; border: 1px solid #000; padding: 6px;">${idx + 1}</td>
         <td style="text-align: center; border: 1px solid #000; padding: 6px;">${s.code}</td>
         <td style="border: 1px solid #000; padding: 6px; font-weight: bold;">${s.name}</td>
-        <td style="text-align: center; border: 1px solid #000; padding: 6px;">${res?.mathScore ?? '-'} (${res?.mathLevel || 'H'})</td>
-        <td style="text-align: center; border: 1px solid #000; padding: 6px;">${res?.vietnameseScore ?? '-'} (${res?.vietnameseLevel || 'H'})</td>
-        <td style="text-align: center; border: 1px solid #000; padding: 6px;">${res?.englishScore ?? '-'} (${res?.englishLevel || 'H'})</td>
-        <td style="text-align: center; border: 1px solid #000; padding: 6px;">${res?.selfAutonomy || 'T'}</td>
-        <td style="text-align: center; border: 1px solid #000; padding: 6px;">${res?.communication || 'T'}</td>
-        <td style="text-align: center; border: 1px solid #000; padding: 6px;">${res?.problemSolving || 'T'}</td>
-        <td style="text-align: center; border: 1px solid #000; padding: 6px; font-weight: bold; color: #166534;">${res?.awardTitle || 'Hoàn thành tốt'}</td>
-        <td style="border: 1px solid #000; padding: 6px; font-size: 13px;">${res?.overallComment || 'Chăm ngoan, hoàn thành tốt nhiệm vụ học tập.'}</td>
+        <td style="text-align: center; border: 1px solid #000; padding: 6px;">${fmtScoreLevel(res?.mathScore, res?.mathLevel)}</td>
+        <td style="text-align: center; border: 1px solid #000; padding: 6px;">${fmtScoreLevel(res?.vietnameseScore, res?.vietnameseLevel)}</td>
+        <td style="text-align: center; border: 1px solid #000; padding: 6px;">${fmtScoreLevel(res?.englishScore, res?.englishLevel)}</td>
+        <td style="text-align: center; border: 1px solid #000; padding: 6px;">${res?.selfAutonomy || ''}</td>
+        <td style="text-align: center; border: 1px solid #000; padding: 6px;">${res?.communication || ''}</td>
+        <td style="text-align: center; border: 1px solid #000; padding: 6px;">${res?.problemSolving || ''}</td>
+        <td style="text-align: center; border: 1px solid #000; padding: 6px; font-weight: bold; color: #166534;">${res?.awardTitle || ''}</td>
+        <td style="border: 1px solid #000; padding: 6px; font-size: 13px;">${res?.overallComment || ''}</td>
       </tr>
     `;
     })

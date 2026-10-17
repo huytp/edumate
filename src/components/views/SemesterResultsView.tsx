@@ -53,28 +53,28 @@ export const SemesterResultsView: React.FC<SemesterResultsViewProps> = ({
       studentId,
       schoolYear: settings.schoolYear,
       semester,
-      mathScore: 9,
-      mathLevel: 'T',
-      vietnameseScore: 9,
-      vietnameseLevel: 'T',
-      englishScore: 9,
-      englishLevel: 'T',
-      scienceLevel: 'T',
-      historyGeoLevel: 'T',
-      ethicsLevel: 'T',
-      musicLevel: 'T',
-      artLevel: 'T',
-      peLevel: 'T',
-      selfAutonomy: 'T',
-      communication: 'T',
-      problemSolving: 'T',
-      patriotism: 'T',
-      compassion: 'T',
-      diligence: 'T',
-      honesty: 'T',
-      responsibility: 'T',
-      awardTitle: 'Học sinh Xuất sắc',
-      overallComment: 'Chăm ngoan, tích cực và hoàn thành xuất sắc các nội dung học tập.',
+      mathScore: undefined,
+      mathLevel: '',
+      vietnameseScore: undefined,
+      vietnameseLevel: '',
+      englishScore: undefined,
+      englishLevel: '',
+      scienceLevel: '',
+      historyGeoLevel: '',
+      ethicsLevel: '',
+      musicLevel: '',
+      artLevel: '',
+      peLevel: '',
+      selfAutonomy: '',
+      communication: '',
+      problemSolving: '',
+      patriotism: '',
+      compassion: '',
+      diligence: '',
+      honesty: '',
+      responsibility: '',
+      awardTitle: '',
+      overallComment: '',
     };
   };
 
@@ -120,39 +120,28 @@ export const SemesterResultsView: React.FC<SemesterResultsViewProps> = ({
           const idx = newResults.findIndex(
             (r) => r.studentId === student.id && r.semester === semester
           );
-          const mathScore = Number(row['Điểm KTĐK Toán'] || 9);
-          const vietnameseScore = Number(row['Điểm KTĐK T.Việt'] || 9);
-          const englishScore = Number(row['Điểm KTĐK T.Anh'] || 9);
-          const mathLevel = (String(row['Mức đạt Toán (T/H/C)'] || 'T')) as SubjectEvaluationLevel;
-          const awardTitle = (String(row['Danh hiệu khen thưởng'] || 'Học sinh Xuất sắc')) as SemesterResult['awardTitle'];
+          const toScore = (v: unknown) =>
+            v === undefined || v === null || v === '' ? undefined : Number(v);
+          const toLevel = (v: unknown): SubjectEvaluationLevel | '' => {
+            const lv = String(v ?? '').trim().toUpperCase();
+            return lv === 'T' || lv === 'H' || lv === 'C' ? lv : '';
+          };
+          const awardTitle = String(row['Danh hiệu khen thưởng'] || '') as SemesterResult['awardTitle'];
+          const base = idx >= 0 ? newResults[idx] : getResult(student.id);
 
           const resItem: SemesterResult = {
-            id: `sr-${student.id}-${semester}`,
-            studentId: student.id,
-            schoolYear: settings.schoolYear,
-            semester,
-            mathScore,
-            mathLevel: ['T', 'H', 'C'].includes(mathLevel) ? mathLevel : 'T',
-            vietnameseScore,
-            vietnameseLevel: 'T',
-            englishScore,
-            englishLevel: 'T',
-            scienceLevel: 'T',
-            historyGeoLevel: 'T',
-            ethicsLevel: 'T',
-            musicLevel: 'T',
-            artLevel: 'T',
-            peLevel: 'T',
-            selfAutonomy: 'T',
-            communication: 'T',
-            problemSolving: 'T',
-            patriotism: 'T',
-            compassion: 'T',
-            diligence: 'T',
-            honesty: 'T',
-            responsibility: 'T',
+            ...base,
+            mathScore: toScore(row['Điểm KTĐK Toán']),
+            mathLevel: toLevel(row['Mức đạt Toán (T/H/C)']),
+            vietnameseScore: toScore(row['Điểm KTĐK T.Việt']),
+            vietnameseLevel: toLevel(row['Mức đạt T.Việt (T/H/C)']),
+            englishScore: toScore(row['Điểm KTĐK T.Anh']),
+            englishLevel: toLevel(row['Mức đạt T.Anh (T/H/C)']),
+            selfAutonomy: toLevel(row['NL Tự chủ & Tự học']),
+            communication: toLevel(row['NL Giao tiếp & Hợp tác']),
+            problemSolving: toLevel(row['NL Giải quyết vấn đề']),
             awardTitle,
-            overallComment: String(row['Nhận xét chung'] || 'Hoàn thành xuất sắc nhiệm vụ học tập.'),
+            overallComment: String(row['Nhận xét chung'] || ''),
           };
 
           if (idx >= 0) {
@@ -318,9 +307,13 @@ export const SemesterResultsView: React.FC<SemesterResultsViewProps> = ({
                         type="number"
                         min={1}
                         max={10}
-                        value={res.mathScore ?? 9}
+                        value={res.mathScore ?? ''}
                         onChange={(e) =>
-                          updateResultField(student.id, 'mathScore', Number(e.target.value))
+                          updateResultField(
+                            student.id,
+                            'mathScore',
+                            e.target.value === '' ? undefined : Number(e.target.value)
+                          )
                         }
                         className="w-10 rounded border border-slate-200 text-center font-bold text-xs py-1"
                       />
@@ -331,7 +324,9 @@ export const SemesterResultsView: React.FC<SemesterResultsViewProps> = ({
                         }
                         className="rounded border border-slate-200 text-xs py-1 px-0.5 font-bold text-sky-700 bg-white"
                       >
-                        <option value="T">T</option>
+                        <option value="">—</option>
+                        <option value="">—</option>
+                      <option value="T">T</option>
                         <option value="H">H</option>
                         <option value="C">C</option>
                       </select>
@@ -345,9 +340,13 @@ export const SemesterResultsView: React.FC<SemesterResultsViewProps> = ({
                         type="number"
                         min={1}
                         max={10}
-                        value={res.vietnameseScore ?? 9}
+                        value={res.vietnameseScore ?? ''}
                         onChange={(e) =>
-                          updateResultField(student.id, 'vietnameseScore', Number(e.target.value))
+                          updateResultField(
+                            student.id,
+                            'vietnameseScore',
+                            e.target.value === '' ? undefined : Number(e.target.value)
+                          )
                         }
                         className="w-10 rounded border border-slate-200 text-center font-bold text-xs py-1"
                       />
@@ -358,7 +357,9 @@ export const SemesterResultsView: React.FC<SemesterResultsViewProps> = ({
                         }
                         className="rounded border border-slate-200 text-xs py-1 px-0.5 font-bold text-sky-700 bg-white"
                       >
-                        <option value="T">T</option>
+                        <option value="">—</option>
+                        <option value="">—</option>
+                      <option value="T">T</option>
                         <option value="H">H</option>
                         <option value="C">C</option>
                       </select>
@@ -372,9 +373,13 @@ export const SemesterResultsView: React.FC<SemesterResultsViewProps> = ({
                         type="number"
                         min={1}
                         max={10}
-                        value={res.englishScore ?? 9}
+                        value={res.englishScore ?? ''}
                         onChange={(e) =>
-                          updateResultField(student.id, 'englishScore', Number(e.target.value))
+                          updateResultField(
+                            student.id,
+                            'englishScore',
+                            e.target.value === '' ? undefined : Number(e.target.value)
+                          )
                         }
                         className="w-10 rounded border border-slate-200 text-center font-bold text-xs py-1"
                       />
@@ -385,7 +390,9 @@ export const SemesterResultsView: React.FC<SemesterResultsViewProps> = ({
                         }
                         className="rounded border border-slate-200 text-xs py-1 px-0.5 font-bold text-sky-700 bg-white"
                       >
-                        <option value="T">T</option>
+                        <option value="">—</option>
+                        <option value="">—</option>
+                      <option value="T">T</option>
                         <option value="H">H</option>
                         <option value="C">C</option>
                       </select>
@@ -401,6 +408,7 @@ export const SemesterResultsView: React.FC<SemesterResultsViewProps> = ({
                       }
                       className="rounded border border-slate-200 text-xs py-1 font-bold text-slate-700 bg-white"
                     >
+                      <option value="">—</option>
                       <option value="T">T</option>
                       <option value="H">H</option>
                       <option value="C">C</option>
@@ -414,6 +422,7 @@ export const SemesterResultsView: React.FC<SemesterResultsViewProps> = ({
                       }
                       className="rounded border border-slate-200 text-xs py-1 font-bold text-slate-700 bg-white"
                     >
+                      <option value="">—</option>
                       <option value="T">T</option>
                       <option value="H">H</option>
                       <option value="C">C</option>
@@ -427,6 +436,7 @@ export const SemesterResultsView: React.FC<SemesterResultsViewProps> = ({
                       }
                       className="rounded border border-slate-200 text-xs py-1 font-bold text-slate-700 bg-white"
                     >
+                      <option value="">—</option>
                       <option value="T">T</option>
                       <option value="H">H</option>
                       <option value="C">C</option>
@@ -442,6 +452,7 @@ export const SemesterResultsView: React.FC<SemesterResultsViewProps> = ({
                       }
                       className="w-full rounded-lg border border-slate-200 bg-white py-1 px-2 text-xs font-bold text-emerald-800 focus:outline-hidden"
                     >
+                      <option value="">— Chưa chọn —</option>
                       <option value="Học sinh Xuất sắc">🏆 Học sinh Xuất sắc</option>
                       <option value="Học sinh Tiêu biểu hoàn thành tốt">
                         ⭐ HS Tiêu biểu
