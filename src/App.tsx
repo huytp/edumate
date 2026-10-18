@@ -74,7 +74,7 @@ export default function App({ account, onSignOut }: AppProps) {
       settings.soundEffectsEnabled,
       settings.speechEnabled,
       settings.speechRate,
-      settings.speechPitch ?? 1.30,
+      settings.speechPitch ?? 1.0,
       settings.preferredVoiceURI ?? ''
     );
   }, [settings]);

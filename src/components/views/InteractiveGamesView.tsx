@@ -1,10 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import confetti from 'canvas-confetti';
 import {
-  Award,
   BookOpen,
   CheckCircle2,
-  Dices,
   Edit,
   ExternalLink,
   Gamepad2,
@@ -55,9 +53,6 @@ export const InteractiveGamesView: React.FC<InteractiveGamesViewProps> = ({
   const [gameFinished, setGameFinished] = useState<boolean>(false);
   const [autoReadQuestion, setAutoReadQuestion] = useState<boolean>(true);
 
-  // Integrated wheel inside games
-  const [isGameWheelOpen, setIsGameWheelOpen] = useState(false);
-  const [chosenContestant, setChosenContestant] = useState<Student | null>(null);
 
   // Modal: Add / Edit Question
   const [isQuestionModalOpen, setIsQuestionModalOpen] = useState(false);
@@ -150,7 +145,7 @@ export const InteractiveGamesView: React.FC<InteractiveGamesViewProps> = ({
     setScore(0);
     setGameFinished(false);
     soundManager.playSuccess();
-    soundManager.speak("Welcome students! Let's play!", 'en-US', 1.30, 0.70);
+    soundManager.speakSlowly('Chào các con! Chúng mình cùng chơi nhé!');
 
     const updated = games.map((g) =>
       g.id === game.id ? { ...g, playCount: g.playCount + 1 } : g
@@ -171,10 +166,10 @@ export const InteractiveGamesView: React.FC<InteractiveGamesViewProps> = ({
       setScore((prev) => prev + 1);
       soundManager.playSuccess();
       confetti({ particleCount: 45, spread: 55, origin: { y: 0.7 } });
-      soundManager.speakEnglishPraise();
+      soundManager.speakPraise();
     } else {
       soundManager.playTick();
-      soundManager.speakEnglishEncouragement();
+      soundManager.speakEncouragement();
     }
   };
 
@@ -192,7 +187,7 @@ export const InteractiveGamesView: React.FC<InteractiveGamesViewProps> = ({
       confetti({ particleCount: 100, spread: 80 });
       soundManager.playFanfare();
       soundManager.playApplause();
-      soundManager.speakEnglishCelebration();
+      soundManager.speakCelebration();
     }
   };
 
@@ -215,9 +210,9 @@ export const InteractiveGamesView: React.FC<InteractiveGamesViewProps> = ({
     soundManager.speakSlowly(`Câu hỏi: ${currentQuestion.prompt}`, 'vi-VN');
   };
 
-  // Pronounce English word with TTS
+  // Read the English word with the Vietnamese female voice
   const handleSpeakEnglishWord = (word: string) => {
-    soundManager.speak(word, 'en-US', 1.30, 0.70);
+    soundManager.speakSlowly(word);
   };
 
   // Award points to selected contestant from game
@@ -247,18 +242,6 @@ export const InteractiveGamesView: React.FC<InteractiveGamesViewProps> = ({
 
     soundManager.playCoin();
     confetti({ particleCount: 50, spread: 60 });
-  };
-
-  // Spin inside game to pick contestant
-  const handleSpinContestant = () => {
-    if (students.length === 0) return;
-    const randomS = students[Math.floor(Math.random() * students.length)];
-    setChosenContestant(randomS);
-    soundManager.playTick();
-    setTimeout(() => {
-      soundManager.playSuccess();
-      soundManager.speak(`Welcome ${randomS.name}! Good luck!`, 'en-US', 1.30, 0.70);
-    }, 400);
   };
 
   // Open Question Modal for Add
@@ -418,21 +401,26 @@ export const InteractiveGamesView: React.FC<InteractiveGamesViewProps> = ({
         </div>
 
         <div className="flex flex-wrap items-center gap-2">
-          {/* Quick contestant picker */}
+          {/* Add external game link */}
           <button
             onClick={() => {
-              setIsGameWheelOpen(true);
-              handleSpinContestant();
+              setNewGameCategory('external');
+              setNewGameIcon('🔗');
+              setIsCreateGameModalOpen(true);
             }}
             className="inline-flex items-center gap-1.5 rounded-xl border border-amber-300 bg-amber-50 px-3.5 py-2 text-xs font-bold text-amber-800 hover:bg-amber-100 transition shadow-xs"
           >
-            <Dices className="h-4 w-4 text-amber-600" />
-            Bốc Thăm Thí Sinh
+            <ExternalLink className="h-4 w-4 text-amber-600" />
+            Thêm Link Trò Chơi
           </button>
 
           {/* Create new game */}
           <button
-            onClick={() => setIsCreateGameModalOpen(true)}
+            onClick={() => {
+              setNewGameCategory('trivia');
+              setNewGameIcon('🎮');
+              setIsCreateGameModalOpen(true);
+            }}
             className="inline-flex items-center gap-1.5 rounded-xl bg-gradient-to-r from-sky-500 to-blue-600 px-3.5 py-2 text-xs font-bold text-white shadow-xs hover:from-sky-600 hover:to-blue-700 transition"
           >
             <Plus className="h-4 w-4" />
@@ -718,12 +706,12 @@ export const InteractiveGamesView: React.FC<InteractiveGamesViewProps> = ({
               <div className="flex flex-wrap justify-center gap-2 pt-2">
                 <button
                   type="button"
-                  onClick={() => soundManager.speakEnglishCelebration()}
+                  onClick={() => soundManager.speakCelebration()}
                   className="inline-flex items-center gap-1.5 rounded-xl border border-sky-300 bg-sky-50 px-3.5 py-2 text-xs font-bold text-sky-700 hover:bg-sky-100 transition"
-                  title="Nghe lời chúc mừng bằng Tiếng Anh"
+                  title="Nghe lời chúc mừng"
                 >
                   <Volume2 className="h-4 w-4 text-sky-600" />
-                  Lời chúc (English)
+                  Nghe lời chúc
                 </button>
                 <button
                   onClick={() => handleLaunchGame(activeGame)}
@@ -1163,7 +1151,9 @@ export const InteractiveGamesView: React.FC<InteractiveGamesViewProps> = ({
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-900/60 p-4 backdrop-blur-xs">
           <div className="w-full max-w-md rounded-3xl bg-white shadow-2xl border border-sky-100 overflow-hidden animate-in zoom-in-95 duration-200">
             <div className="flex items-center justify-between border-b border-slate-100 bg-sky-50/70 px-6 py-4">
-              <h3 className="font-bold text-slate-800 text-sm">Tạo Trò Chơi Mới Cho Lớp</h3>
+              <h3 className="font-bold text-slate-800 text-sm">
+                {newGameCategory === 'external' ? 'Thêm Link Trò Chơi Bên Ngoài' : 'Tạo Trò Chơi Mới Cho Lớp'}
+              </h3>
               <button
                 onClick={() => setIsCreateGameModalOpen(false)}
                 className="rounded-lg p-1.5 text-slate-400 hover:bg-slate-200/60 hover:text-slate-600"
@@ -1263,58 +1253,6 @@ export const InteractiveGamesView: React.FC<InteractiveGamesViewProps> = ({
                 </button>
               </div>
             </form>
-          </div>
-        </div>
-      )}
-
-      {/* QUICK CONTESTANT PICKER MODAL */}
-      {isGameWheelOpen && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-900/60 p-4 backdrop-blur-xs">
-          <div className="w-full max-w-sm rounded-3xl bg-white p-6 shadow-2xl border border-sky-100 text-center animate-in zoom-in-95">
-            <div className="flex justify-between items-center mb-4">
-              <h4 className="font-bold text-xs uppercase tracking-wider text-slate-400">
-                Bốc Thăm Thí Sinh Ngẫu Nhiên
-              </h4>
-              <button
-                onClick={() => setIsGameWheelOpen(false)}
-                className="rounded-lg p-1 text-slate-400 hover:bg-slate-100"
-              >
-                <X className="h-5 w-5" />
-              </button>
-            </div>
-
-            {chosenContestant ? (
-              <div className="space-y-3">
-                <div className="text-6xl animate-bounce">{chosenContestant.avatar}</div>
-                <h3 className="text-xl font-black text-slate-900">{chosenContestant.name}</h3>
-                <p className="text-xs text-slate-500 font-mono">Mã HS: {chosenContestant.code}</p>
-
-                <div className="pt-2 flex justify-center gap-2">
-                  <button
-                    onClick={handleSpinContestant}
-                    className="inline-flex items-center gap-1 rounded-xl border border-slate-200 px-3 py-2 text-xs font-bold text-slate-700 hover:bg-slate-50"
-                  >
-                    <RotateCcw className="h-3.5 w-3.5" />
-                    Chọn bạn khác
-                  </button>
-                  <button
-                    onClick={() => {
-                      handleAwardPointsToContestant(chosenContestant, 2);
-                      setIsGameWheelOpen(false);
-                    }}
-                    className="inline-flex items-center gap-1 rounded-xl bg-amber-500 px-3.5 py-2 text-xs font-bold text-white hover:bg-amber-600 shadow-xs"
-                  >
-                    <Award className="h-3.5 w-3.5" />
-                    + Thưởng 2 Điểm
-                  </button>
-                </div>
-              </div>
-            ) : (
-              <div className="py-6">
-                <Dices className="mx-auto h-12 w-12 text-sky-400 animate-spin" />
-                <p className="mt-2 text-xs font-bold text-slate-600">Đang chọn thí sinh...</p>
-              </div>
-            )}
           </div>
         </div>
       )}

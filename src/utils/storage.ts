@@ -28,7 +28,7 @@ export const DEFAULT_SETTINGS: AppSettings = {
   speechEnabled: true,
   speechVoice: 'vi',
   speechRate: 0.70, // Đọc chậm rãi, rõ ràng, dễ nghe nhất cho học sinh lớp 1
-  speechPitch: 1.30, // Cao độ giọng nữ ngọt ngào, ấm áp của cô giáo
+  speechPitch: 1.0, // Cao độ tự nhiên, giữ đúng thanh điệu tiếng Việt
   preferredVoiceURI: '',
 };
 

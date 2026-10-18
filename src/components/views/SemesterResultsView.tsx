@@ -8,6 +8,7 @@ import {
   GraduationCap,
   Save,
   Search,
+  Trash2,
   Upload,
 } from 'lucide-react';
 import {
@@ -40,9 +41,23 @@ export const SemesterResultsView: React.FC<SemesterResultsViewProps> = ({
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedStudentId, setSelectedStudentId] = useState<string | null>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
+  // Manual edits are kept as per-student drafts until the teacher presses "Cập nhật"
+  const [drafts, setDrafts] = useState<Record<string, SemesterResult>>({});
+  const [selectedIds, setSelectedIds] = useState<Set<string>>(new Set());
 
-  // Helper to get or create result
-  const getResult = (studentId: string): SemesterResult => {
+  const draftKey = (studentId: string) => `${semester}|${studentId}`;
+  const isDirty = (studentId: string) => Boolean(drafts[draftKey(studentId)]);
+
+  const removeDrafts = (studentIds: string[]) => {
+    setDrafts((prev) => {
+      const next = { ...prev };
+      studentIds.forEach((id) => delete next[draftKey(id)]);
+      return next;
+    });
+  };
+
+  // Saved result for the current semester, or an empty one
+  const getSavedResult = (studentId: string): SemesterResult => {
     const found = results.find(
       (r) => r.studentId === studentId && r.semester === semester
     );
@@ -78,27 +93,65 @@ export const SemesterResultsView: React.FC<SemesterResultsViewProps> = ({
     };
   };
 
-  // Update specific field for student result
+  // Draft (if being edited) or saved result
+  const getResult = (studentId: string): SemesterResult =>
+    drafts[draftKey(studentId)] ?? getSavedResult(studentId);
+
+  // Update specific field in the student's draft
   const updateResultField = (
     studentId: string,
     field: keyof SemesterResult,
     value: unknown
   ) => {
-    const existing = results.find(
-      (r) => r.studentId === studentId && r.semester === semester
-    );
-    let updated: SemesterResult[];
+    const key = draftKey(studentId);
+    setDrafts((prev) => ({
+      ...prev,
+      [key]: { ...(prev[key] ?? getSavedResult(studentId)), [field]: value },
+    }));
+  };
 
-    if (existing) {
-      updated = results.map((r) =>
-        r.id === existing.id ? { ...r, [field]: value } : r
-      );
-    } else {
-      const newR = { ...getResult(studentId), [field]: value };
-      updated = [...results, newR];
-    }
+  // Save drafts of the given students
+  const commitDrafts = (studentIds: string[]) => {
+    const dirtyIds = studentIds.filter(isDirty);
+    if (dirtyIds.length === 0) return;
+
+    const updated = [...results];
+    dirtyIds.forEach((id) => {
+      const draft = drafts[draftKey(id)];
+      const idx = updated.findIndex((r) => r.studentId === id && r.semester === semester);
+      if (idx >= 0) {
+        updated[idx] = draft;
+      } else {
+        updated.push(draft);
+      }
+    });
 
     onUpdateResults(updated);
+    removeDrafts(dirtyIds);
+    soundManager.playSuccess();
+  };
+
+  // Clear the current semester's results of the given students
+  const deleteResults = (studentIds: string[], confirmMessage: string) => {
+    if (studentIds.length === 0 || !window.confirm(confirmMessage)) return;
+
+    const ids = new Set(studentIds);
+    onUpdateResults(results.filter((r) => !(r.semester === semester && ids.has(r.studentId))));
+    removeDrafts(studentIds);
+    setSelectedIds((prev) => new Set([...prev].filter((id) => !ids.has(id))));
+    soundManager.playTick();
+  };
+
+  const toggleSelected = (studentId: string) => {
+    setSelectedIds((prev) => {
+      const next = new Set(prev);
+      if (next.has(studentId)) {
+        next.delete(studentId);
+      } else {
+        next.add(studentId);
+      }
+      return next;
+    });
   };
 
   // Import results from Excel file
@@ -112,6 +165,7 @@ export const SemesterResultsView: React.FC<SemesterResultsViewProps> = ({
       const jsonData = XLSX.utils.sheet_to_json<Record<string, unknown>>(sheet);
 
       const newResults = [...results];
+      const importedIds: string[] = [];
 
       jsonData.forEach((row) => {
         const code = String(row['Mã HS'] || row['Mã học sinh'] || '');
@@ -127,7 +181,8 @@ export const SemesterResultsView: React.FC<SemesterResultsViewProps> = ({
             return lv === 'T' || lv === 'H' || lv === 'C' ? lv : '';
           };
           const awardTitle = String(row['Danh hiệu khen thưởng'] || '') as SemesterResult['awardTitle'];
-          const base = idx >= 0 ? newResults[idx] : getResult(student.id);
+          const base = idx >= 0 ? newResults[idx] : getSavedResult(student.id);
+          importedIds.push(student.id);
 
           const resItem: SemesterResult = {
             ...base,
@@ -153,6 +208,7 @@ export const SemesterResultsView: React.FC<SemesterResultsViewProps> = ({
       });
 
       onUpdateResults(newResults);
+      removeDrafts(importedIds);
       soundManager.playSuccess();
       alert(`Đã nhập thành công kết quả cho ${jsonData.length} học sinh từ file Excel!`);
     } catch {
@@ -165,6 +221,19 @@ export const SemesterResultsView: React.FC<SemesterResultsViewProps> = ({
       s.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
       s.code.toLowerCase().includes(searchQuery.toLowerCase())
   );
+
+  const filteredIds = filteredStudents.map((s) => s.id);
+  const selectedVisibleIds = filteredIds.filter((id) => selectedIds.has(id));
+  const allSelected = filteredIds.length > 0 && selectedVisibleIds.length === filteredIds.length;
+  const selectedDirtyCount = selectedVisibleIds.filter(isDirty).length;
+
+  const toggleSelectAll = () => {
+    setSelectedIds((prev) => {
+      const next = new Set(prev);
+      filteredIds.forEach((id) => (allSelected ? next.delete(id) : next.add(id)));
+      return next;
+    });
+  };
 
   return (
     <div className="space-y-6 animate-in fade-in duration-300">
@@ -251,11 +320,74 @@ export const SemesterResultsView: React.FC<SemesterResultsViewProps> = ({
         </div>
       </div>
 
+      {/* Bulk actions */}
+      <div className="flex flex-wrap items-center gap-2">
+        <button
+          onClick={toggleSelectAll}
+          className="inline-flex items-center gap-1.5 rounded-xl border border-slate-200 bg-white px-3 py-2 text-xs font-semibold text-slate-700 hover:bg-slate-50 shadow-xs"
+        >
+          <input type="checkbox" checked={allSelected} readOnly className="pointer-events-none accent-sky-600" />
+          <span>{allSelected ? 'Bỏ chọn tất cả' : 'Chọn tất cả'}</span>
+        </button>
+
+        <button
+          onClick={() => commitDrafts(selectedVisibleIds)}
+          disabled={selectedDirtyCount === 0}
+          className="inline-flex items-center gap-1.5 rounded-xl bg-sky-600 px-3.5 py-2 text-xs font-bold text-white hover:bg-sky-700 shadow-xs disabled:opacity-40 disabled:cursor-not-allowed"
+          title="Lưu các thay đổi của học sinh đã chọn"
+        >
+          <Save className="h-4 w-4" />
+          <span>Cập nhật đã chọn ({selectedDirtyCount})</span>
+        </button>
+
+        <button
+          onClick={() =>
+            deleteResults(
+              selectedVisibleIds,
+              `Xóa kết quả ${semester} của ${selectedVisibleIds.length} học sinh đã chọn?`
+            )
+          }
+          disabled={selectedVisibleIds.length === 0}
+          className="inline-flex items-center gap-1.5 rounded-xl border border-rose-200 bg-white px-3 py-2 text-xs font-semibold text-rose-600 hover:bg-rose-50 shadow-xs disabled:opacity-40 disabled:cursor-not-allowed"
+        >
+          <Trash2 className="h-4 w-4" />
+          <span>Xóa đã chọn ({selectedVisibleIds.length})</span>
+        </button>
+
+        <button
+          onClick={() =>
+            deleteResults(
+              students.map((s) => s.id),
+              `Xóa toàn bộ kết quả ${semester} của tất cả học sinh? Hành động này không thể hoàn tác.`
+            )
+          }
+          className="inline-flex items-center gap-1.5 rounded-xl border border-rose-300 bg-rose-50 px-3 py-2 text-xs font-bold text-rose-700 hover:bg-rose-100 shadow-xs"
+        >
+          <Trash2 className="h-4 w-4" />
+          <span>Xóa tất cả</span>
+        </button>
+
+        {Object.keys(drafts).some((k) => k.startsWith(`${semester}|`)) && (
+          <span className="text-[11px] font-semibold text-amber-700">
+            Có thay đổi chưa lưu — bấm "Cập nhật" ở từng dòng để lưu.
+          </span>
+        )}
+      </div>
+
       {/* Main Table Matrix (Conforming to Circular 27) */}
       <div className="overflow-x-auto rounded-2xl border border-sky-100 bg-white shadow-xs">
         <table className="w-full text-left text-xs">
           <thead className="bg-sky-50/80 text-slate-700 font-bold border-b border-sky-100 sticky top-0">
             <tr>
+              <th className="p-3 w-10 text-center" rowSpan={2}>
+                <input
+                  type="checkbox"
+                  checked={allSelected}
+                  onChange={toggleSelectAll}
+                  className="accent-sky-600"
+                  title="Chọn tất cả"
+                />
+              </th>
               <th className="p-3 w-12 text-center" rowSpan={2}>STT</th>
               <th className="p-3 w-16" rowSpan={2}>Mã HS</th>
               <th className="p-3 min-w-[150px]" rowSpan={2}>Họ và tên</th>
@@ -271,6 +403,9 @@ export const SemesterResultsView: React.FC<SemesterResultsViewProps> = ({
               <th className="p-2 min-w-[200px]" rowSpan={2}>
                 Nhận xét tổng hợp
               </th>
+              <th className="p-2 text-center min-w-[130px]" rowSpan={2}>
+                Thao tác
+              </th>
             </tr>
             <tr className="border-t border-sky-100 text-[11px] bg-slate-50/60">
               <th className="p-1.5 text-center border-l border-sky-100">Toán</th>
@@ -284,9 +419,21 @@ export const SemesterResultsView: React.FC<SemesterResultsViewProps> = ({
           <tbody className="divide-y divide-slate-100">
             {filteredStudents.map((student, idx) => {
               const res = getResult(student.id);
+              const dirty = isDirty(student.id);
 
               return (
-                <tr key={student.id} className="hover:bg-slate-50/60 transition">
+                <tr
+                  key={student.id}
+                  className={`transition ${dirty ? 'bg-amber-50/60' : 'hover:bg-slate-50/60'}`}
+                >
+                  <td className="p-3 text-center">
+                    <input
+                      type="checkbox"
+                      checked={selectedIds.has(student.id)}
+                      onChange={() => toggleSelected(student.id)}
+                      className="accent-sky-600"
+                    />
+                  </td>
                   <td className="p-3 text-center font-mono font-bold text-slate-400">
                     {idx + 1}
                   </td>
@@ -325,8 +472,7 @@ export const SemesterResultsView: React.FC<SemesterResultsViewProps> = ({
                         className="rounded border border-slate-200 text-xs py-1 px-0.5 font-bold text-sky-700 bg-white"
                       >
                         <option value="">—</option>
-                        <option value="">—</option>
-                      <option value="T">T</option>
+                        <option value="T">T</option>
                         <option value="H">H</option>
                         <option value="C">C</option>
                       </select>
@@ -358,8 +504,7 @@ export const SemesterResultsView: React.FC<SemesterResultsViewProps> = ({
                         className="rounded border border-slate-200 text-xs py-1 px-0.5 font-bold text-sky-700 bg-white"
                       >
                         <option value="">—</option>
-                        <option value="">—</option>
-                      <option value="T">T</option>
+                        <option value="T">T</option>
                         <option value="H">H</option>
                         <option value="C">C</option>
                       </select>
@@ -391,8 +536,7 @@ export const SemesterResultsView: React.FC<SemesterResultsViewProps> = ({
                         className="rounded border border-slate-200 text-xs py-1 px-0.5 font-bold text-sky-700 bg-white"
                       >
                         <option value="">—</option>
-                        <option value="">—</option>
-                      <option value="T">T</option>
+                        <option value="T">T</option>
                         <option value="H">H</option>
                         <option value="C">C</option>
                       </select>
@@ -475,6 +619,33 @@ export const SemesterResultsView: React.FC<SemesterResultsViewProps> = ({
                       placeholder="Lời phê tổng kết..."
                       className="w-full rounded-lg border border-slate-200 py-1 px-2 text-xs focus:border-sky-500 focus:outline-hidden"
                     />
+                  </td>
+
+                  {/* Row actions */}
+                  <td className="p-2">
+                    <div className="flex items-center justify-center gap-1">
+                      <button
+                        onClick={() => commitDrafts([student.id])}
+                        disabled={!dirty}
+                        className="inline-flex items-center gap-1 rounded-lg bg-sky-600 px-2.5 py-1 text-[11px] font-bold text-white hover:bg-sky-700 disabled:bg-slate-200 disabled:text-slate-400 disabled:cursor-not-allowed"
+                        title={dirty ? 'Lưu thay đổi của học sinh này' : 'Chưa có thay đổi'}
+                      >
+                        <Save className="h-3.5 w-3.5" />
+                        Cập nhật
+                      </button>
+                      <button
+                        onClick={() =>
+                          deleteResults(
+                            [student.id],
+                            `Xóa kết quả ${semester} của học sinh ${student.name}?`
+                          )
+                        }
+                        className="rounded-lg p-1.5 text-rose-500 hover:bg-rose-50"
+                        title="Xóa kết quả của học sinh này"
+                      >
+                        <Trash2 className="h-3.5 w-3.5" />
+                      </button>
+                    </div>
                   </td>
                 </tr>
               );

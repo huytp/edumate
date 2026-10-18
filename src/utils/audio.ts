@@ -13,7 +13,7 @@ class SoundManager {
   private isEnabled: boolean = true;
   private speechEnabled: boolean = true;
   private speechRate: number = 0.70; // Tốc độ đọc chậm rãi, ngọt ngào, chuẩn cho học sinh Lớp 1 (0.68 - 0.72)
-  private speechPitch: number = 1.30; // Cao độ trong trẻo, êm dịu của cô giáo
+  private speechPitch: number = 1.0; // Cao độ tự nhiên để giữ đúng thanh điệu tiếng Việt
   private preferredVoiceURI: string = '';
   private cachedVoices: SpeechSynthesisVoice[] = [];
 
@@ -37,13 +37,13 @@ class SoundManager {
     sound: boolean,
     speech: boolean,
     rate: number = 0.70,
-    pitch: number = 1.30,
+    pitch: number = 1.0,
     voiceURI: string = ''
   ) {
     this.isEnabled = sound;
     this.speechEnabled = speech;
     this.speechRate = rate > 0 ? rate : 0.70;
-    this.speechPitch = pitch > 0 ? pitch : 1.30;
+    this.speechPitch = pitch > 0 ? pitch : 1.0;
     this.preferredVoiceURI = voiceURI || '';
   }
 
@@ -56,7 +56,7 @@ class SoundManager {
   }
 
   public setSpeechPitch(pitch: number) {
-    this.speechPitch = pitch > 0 ? pitch : 1.30;
+    this.speechPitch = pitch > 0 ? pitch : 1.0;
   }
 
   private initCtx() {
@@ -218,8 +218,7 @@ class SoundManager {
 
   /**
    * Strictly determines if a voice belongs to a male persona.
-   * Explicitly catches male voices across Windows (David, Mark, George, NamMinh),
-   * Chrome (Google US English male, Android TTS male), macOS, and Linux.
+   * Catches male voices across Windows (An, NamMinh, David, Mark), Chrome, macOS and Android.
    */
   public isMaleVoice(voice: SpeechSynthesisVoice): boolean {
     const rawName = `${voice.name} ${voice.voiceURI}`.toLowerCase();
@@ -230,304 +229,112 @@ class SoundManager {
       .replace(/việt nam/g, '')
       .replace(/viet nam/g, '');
 
-    // Common male voice names across Windows, MacOS, iOS, Android, and Chromium
+    // Windows built-in Vietnamese voice "Microsoft An" is male
+    if (/\bmicrosoft an\b/.test(sanitized)) return true;
+
     const maleTokens = [
       'namminh',
       'nam minh',
       'nam-minh',
+      'giọng nam',
       'david',
       'mark',
       'george',
-      'richard',
       'daniel',
       'alex',
       'fred',
-      'bruce',
-      'junior',
-      'ralph',
-      'tom',
       'male',
-      'man',
-      'boy',
       'guy',
-      'stefan',
-      'paul',
-      'james',
-      'john',
-      'oliver',
-      'harry',
-      'charles',
-      'ravi',
-      'cosmo',
-      'eddy',
-      'reed',
-      'rocky',
-      'grandpa',
-      'sir',
-      'mr.',
-      'mr ',
-      'father',
-      'google us english', // In Chrome desktop, Google US English is a male voice
-      'microsoft david',
-      'microsoft mark',
-      'microsoft george',
     ];
 
-    for (const token of maleTokens) {
-      if (sanitized.includes(token)) return true;
-    }
+    return maleTokens.some((token) => sanitized.includes(token));
+  }
 
-    return false;
+  // Only standard Vietnamese (vi-VN) voices are used
+  private isVietnameseVoice(voice: SpeechSynthesisVoice): boolean {
+    return voice.lang.toLowerCase().replace('_', '-').startsWith('vi');
+  }
+
+  // Known Vietnamese female voices: Edge/Windows HoaiMy, Chrome "Google Tiếng Việt", macOS/iOS Linh
+  private isConfirmedVietnameseFemale(voice: SpeechSynthesisVoice): boolean {
+    const n = voice.name.toLowerCase();
+    return ['hoaimy', 'hoài my', 'hoai my', 'google tiếng việt', 'google tieng viet', 'linh', 'female', 'giọng nữ'].some(
+      (kw) => n.includes(kw)
+    );
+  }
+
+  private getVietnameseFemaleVoices(): SpeechSynthesisVoice[] {
+    const voices = this.refreshVoices().filter(
+      (v) => this.isVietnameseVoice(v) && !this.isMaleVoice(v)
+    );
+    // Confirmed female voices first, natural (online) voices before local ones
+    const rank = (v: SpeechSynthesisVoice) =>
+      (this.isConfirmedVietnameseFemale(v) ? 0 : 2) + (/natural|online/i.test(v.name) ? 0 : 1);
+    return voices.sort((a, b) => rank(a) - rank(b));
   }
 
   /**
-   * Get list of verified female voices installed on user's device for selection UI
+   * Vietnamese female voices installed on the device, for the selection UI
    */
   public getAvailableFemaleVoices(): VoiceOption[] {
-    const allVoices = this.refreshVoices();
-    if (!allVoices || allVoices.length === 0) return [];
-
-    const femaleKeywords = [
-      'hoaimy',
-      'hoài my',
-      'mai',
-      'linh',
-      'chi',
-      'an',
-      'lan',
-      'huong',
-      'thao',
-      'ngoc',
-      'trang',
-      'nhi',
-      'vy',
-      'yen',
-      'jenny',
-      'aria',
-      'samantha',
-      'victoria',
-      'zira',
-      'karen',
-      'hazel',
-      'helena',
-      'catherine',
-      'ava',
-      'tessa',
-      'moira',
-      'clara',
-      'amy',
-      'emily',
-      'sarah',
-      'linda',
-      'alice',
-      'sophia',
-      'olivia',
-      'emma',
-      'siri',
-      'female',
-      'woman',
-      'girl',
-      'google tiếng việt',
-      'google uk english female',
-    ];
-
-    const results: VoiceOption[] = [];
-
-    for (const v of allVoices) {
-      if (this.isMaleVoice(v)) continue;
-
+    return this.getVietnameseFemaleVoices().map((v) => {
       const lower = v.name.toLowerCase();
-      const isConfirmedFemale = femaleKeywords.some((kw) => lower.includes(kw));
-
-      let displayName = v.name;
-      let isRecommended = false;
-
-      if (lower.includes('hoaimy') || lower.includes('hoài my')) {
-        displayName = `🌸 Cô giáo Hoài My (Việt Nam - Giọng nữ dịu dàng khuyên dùng)`;
-        isRecommended = true;
-      } else if (lower.includes('google tiếng việt')) {
-        displayName = `🇻🇳 Google Tiếng Việt (Nữ nhẹ nhàng)`;
-        isRecommended = true;
-      } else if (lower.includes('jenny')) {
-        displayName = `🇺🇸 Microsoft Jenny (Giọng nữ chuẩn)`;
-        isRecommended = true;
-      } else if (lower.includes('aria')) {
-        displayName = `🇺🇸 Microsoft Aria (Giọng nữ trong trẻo)`;
-        isRecommended = true;
-      } else if (lower.includes('zira')) {
-        displayName = `🇺🇸 Microsoft Zira (Nữ rõ ràng)`;
-      } else if (lower.includes('samantha')) {
-        displayName = `🍎 Samantha (Giọng nữ ấm áp)`;
-      } else if (lower.includes('victoria')) {
-        displayName = `🍎 Victoria (Giọng nữ nhẹ)`;
-      } else if (lower.includes('google uk english female')) {
-        displayName = `🇬🇧 Google UK English (Nữ Anh)`;
-      } else if (isConfirmedFemale) {
-        displayName = `👩‍🏫 ${v.name} (Giọng nữ)`;
-      } else if (!this.isMaleVoice(v)) {
-        displayName = `👩‍🏫 ${v.name} (Nữ)`;
+      let displayName = `🇻🇳 ${v.name} (Giọng nữ tiếng Việt)`;
+      if (lower.includes('hoaimy') || lower.includes('hoài my') || lower.includes('hoai my')) {
+        displayName = `🌸 Cô giáo Hoài My (Giọng nữ miền Bắc chuẩn - khuyên dùng)`;
+      } else if (lower.includes('google')) {
+        displayName = `🇻🇳 Google Tiếng Việt (Giọng nữ chuẩn)`;
+      } else if (lower.includes('linh')) {
+        displayName = `🍎 Linh (Giọng nữ tiếng Việt)`;
       }
-
-      results.push({
+      return {
         voiceURI: v.voiceURI,
         name: v.name,
         lang: v.lang,
         displayName,
-        isRecommended,
-      });
-    }
-
-    // Sort recommended first
-    return results.sort((a, b) => {
-      if (a.isRecommended && !b.isRecommended) return -1;
-      if (!a.isRecommended && b.isRecommended) return 1;
-      return a.displayName.localeCompare(b.displayName);
+        isRecommended: this.isConfirmedVietnameseFemale(v),
+      };
     });
   }
 
   /**
-   * Find a gentle, standard female voice for the specified language.
-   * ABSOLUTE GUARANTEE: Never, under any circumstances, returns a male voice.
+   * Find a standard Vietnamese female voice.
+   * Never returns a male voice or a voice of another language.
    */
-  private findFemaleVoice(lang: string): SpeechSynthesisVoice | null {
-    const allVoices = this.refreshVoices();
-
-    if (!allVoices || allVoices.length === 0) return null;
-
-    // 0. If user specifically selected a preferred voice and it is NOT male:
+  private findFemaleVoice(): SpeechSynthesisVoice | null {
+    const voices = this.getVietnameseFemaleVoices();
     if (this.preferredVoiceURI) {
-      const preferred = allVoices.find(
-        (v) => v.voiceURI === this.preferredVoiceURI && !this.isMaleVoice(v)
-      );
+      const preferred = voices.find((v) => v.voiceURI === this.preferredVoiceURI);
       if (preferred) return preferred;
     }
-
-    const langPrefix = lang.split('-')[0].toLowerCase();
-    const langVoices = allVoices.filter((v) =>
-      v.lang.toLowerCase().startsWith(langPrefix)
-    );
-
-    // Known female names & keywords across all major TTS engines
-    const femaleKeywords = [
-      'hoaimy',
-      'hoài my',
-      'mai',
-      'linh',
-      'chi',
-      'an',
-      'lan',
-      'huong',
-      'thao',
-      'ngoc',
-      'trang',
-      'nhi',
-      'vy',
-      'yen',
-      'google tiếng việt',
-      'jenny',
-      'aria',
-      'samantha',
-      'victoria',
-      'zira',
-      'karen',
-      'hazel',
-      'helena',
-      'catherine',
-      'ava',
-      'tessa',
-      'moira',
-      'clara',
-      'amy',
-      'emily',
-      'google uk english female',
-      'siri',
-      'female',
-      'woman',
-      'girl',
-    ];
-
-    // Priority 1: High-end Vietnamese female voices (Hoài My, Google tiếng Việt, Linh, Mai, Chi)
-    if (langPrefix === 'vi') {
-      const hoaimy = langVoices.find(
-        (v) =>
-          !this.isMaleVoice(v) &&
-          (v.name.toLowerCase().includes('hoaimy') || v.name.toLowerCase().includes('hoài my'))
-      );
-      if (hoaimy) return hoaimy;
-
-      const gVi = langVoices.find(
-        (v) => !this.isMaleVoice(v) && v.name.toLowerCase().includes('tiếng việt')
-      );
-      if (gVi) return gVi;
-    }
-
-    // Priority 2: Safe female voice in requested language
-    const safeLangVoices = langVoices.filter((v) => !this.isMaleVoice(v));
-
-    if (safeLangVoices.length > 0) {
-      // Look for confirmed female keyword
-      const confirmedFemale = safeLangVoices.find((v) => {
-        const n = v.name.toLowerCase();
-        return femaleKeywords.some((kw) => n.includes(kw));
-      });
-      if (confirmedFemale) return confirmedFemale;
-
-      // Safe non-male voice in this language
-      return safeLangVoices[0];
-    }
-
-    // Priority 3: If no voice in this language is female, find ANY verified female voice across the entire OS:
-    const anyConfirmedFemale = allVoices.find(
-      (v) =>
-        !this.isMaleVoice(v) &&
-        femaleKeywords.some((kw) => v.name.toLowerCase().includes(kw))
-    );
-    if (anyConfirmedFemale) {
-      return anyConfirmedFemale;
-    }
-
-    // Priority 4: Any non-male voice across system
-    const anyNonMale = allVoices.find((v) => !this.isMaleVoice(v));
-    if (anyNonMale) {
-      return anyNonMale;
-    }
-
-    return null;
+    return voices[0] ?? null;
   }
 
   /**
-   * Web Speech API Voice Reading:
-   * Enforces soft, sweet, gentle female tone (pitch: 1.30, rate: 0.70)
-   * Slow, calm, articulate pacing specifically for Grade 1 elementary pupils.
-   * Completely excludes any male voice or rushed tempo.
+   * Web Speech API Voice Reading — always a Vietnamese female voice (vi-VN),
+   * slow and calm for Grade 1 pupils. Natural pitch keeps Vietnamese tones accurate.
+   * If the device has no Vietnamese female voice, nothing is spoken (never a male/foreign voice).
    */
-  public speak(
-    text: string,
-    lang: 'vi-VN' | 'en-US' = 'vi-VN',
-    customPitch?: number,
-    customRate?: number
-  ) {
+  public speak(text: string, lang: 'vi-VN' = 'vi-VN', customPitch?: number, customRate?: number) {
     if (!this.speechEnabled || typeof window === 'undefined' || !('speechSynthesis' in window)) {
       return;
     }
     try {
+      const femaleVoice = this.findFemaleVoice();
+      if (!femaleVoice) return;
+
       window.speechSynthesis.cancel();
       const utterance = new SpeechSynthesisUtterance(text);
       utterance.lang = lang;
+      utterance.voice = femaleVoice;
 
-      // Pacing strictly controlled: default 0.70 (slow, calm, clear for grade 1)
+      // Pacing: default 0.70 (slow, calm, clear for grade 1)
       const targetRate = customRate ?? this.speechRate ?? 0.70;
       utterance.rate = Math.min(Math.max(targetRate, 0.5), 0.95);
 
-      // Pitch strictly controlled: elevated to soft, feminine teacher tone
-      const targetPitch = customPitch ?? this.speechPitch ?? 1.30;
-      utterance.pitch = Math.min(Math.max(targetPitch, 1.15), 1.6);
-
-      // Select strictly gentle female voice
-      const femaleVoice = this.findFemaleVoice(lang);
-      if (femaleVoice && !this.isMaleVoice(femaleVoice)) {
-        utterance.voice = femaleVoice;
-      }
+      // Pitch kept close to natural so Vietnamese tones (sắc, huyền, hỏi, ngã, nặng) stay correct
+      const targetPitch = customPitch ?? this.speechPitch ?? 1.0;
+      utterance.pitch = Math.min(Math.max(targetPitch, 0.95), 1.1);
 
       window.speechSynthesis.speak(utterance);
     } catch {
@@ -542,13 +349,13 @@ class SoundManager {
     }
   }
 
-  // Slow, clear reading tailored specifically for Grade 1 elementary pupils (rate 0.70, pitch 1.30)
-  public speakSlowly(text: string, lang: 'vi-VN' | 'en-US' = 'vi-VN') {
-    this.speak(text, lang, 1.30, 0.70);
+  // Slow, clear reading tailored specifically for Grade 1 elementary pupils
+  public speakSlowly(text: string, lang: 'vi-VN' = 'vi-VN') {
+    this.speak(text, lang, undefined, 0.70);
   }
 
   // Read full question and its multiple-choice options with natural teacher pauses
-  public speakQuestionAndOptions(prompt: string, options: string[], lang: 'vi-VN' | 'en-US' = 'vi-VN') {
+  public speakQuestionAndOptions(prompt: string, options: string[], lang: 'vi-VN' = 'vi-VN') {
     const letters = ['A', 'B', 'C', 'D', 'E'];
     const optionTexts = options
       .map((opt, i) => `Đáp án ${letters[i] || i + 1}: ${opt}.`)
@@ -557,53 +364,41 @@ class SoundManager {
     this.speakSlowly(fullText, lang);
   }
 
-  /**
-   * Short, clear, energetic English praises for Grade 1 pupils
-   * Examples: Good job, Well done, Wonderful, Great job, Super star
-   */
-  public speakEnglishPraise() {
-    const praiseLines = [
-      'Good job!',
-      'Well done!',
-      'Wonderful!',
-      'Great job!',
-      'Super star!',
-      'Excellent!',
-    ];
-    const picked = praiseLines[Math.floor(Math.random() * praiseLines.length)];
-    // Standard English pronunciation, slow, crisp, sweet female voice
-    this.speak(picked, 'en-US', 1.30, 0.72);
+  private speakRandom(lines: string[]) {
+    this.speak(lines[Math.floor(Math.random() * lines.length)], 'vi-VN', undefined, 0.72);
   }
 
-  /**
-   * Short, caring English encouragements for Grade 1 pupils
-   * Examples: Keep going, Don't worry, Nice try, Try again, You can do it
-   */
-  public speakEnglishEncouragement() {
-    const encourageLines = [
-      'Keep going!',
-      "Don't worry!",
-      'Nice try!',
-      'Try again!',
-      'You can do it!',
-    ];
-    const picked = encourageLines[Math.floor(Math.random() * encourageLines.length)];
-    // Standard English pronunciation, warm, gentle and slow
-    this.speak(picked, 'en-US', 1.28, 0.70);
+  // Short Vietnamese praises for Grade 1 pupils
+  public speakPraise() {
+    this.speakRandom([
+      'Giỏi quá!',
+      'Con làm tốt lắm!',
+      'Tuyệt vời!',
+      'Đúng rồi, giỏi lắm!',
+      'Hoan hô con!',
+      'Xuất sắc quá!',
+    ]);
   }
 
-  /**
-   * Short, joyful English game finish celebration for Grade 1 pupils
-   */
-  public speakEnglishCelebration() {
-    const celebrations = [
-      'Wonderful! Good job everyone!',
-      'Well done! You did it!',
-      'Super star! Great job!',
-      'Congratulations! Good job!',
-    ];
-    const picked = celebrations[Math.floor(Math.random() * celebrations.length)];
-    this.speak(picked, 'en-US', 1.30, 0.72);
+  // Short, caring Vietnamese encouragements for Grade 1 pupils
+  public speakEncouragement() {
+    this.speakRandom([
+      'Cố lên nào!',
+      'Không sao đâu con!',
+      'Con thử lại nhé!',
+      'Gần đúng rồi, cố lên!',
+      'Con làm được mà!',
+    ]);
+  }
+
+  // Short, joyful Vietnamese game-finish celebration
+  public speakCelebration() {
+    this.speakRandom([
+      'Tuyệt vời! Cả lớp giỏi quá!',
+      'Hoan hô! Các con đã hoàn thành rồi!',
+      'Chúc mừng các con! Giỏi lắm!',
+      'Cả lớp mình làm tốt lắm!',
+    ]);
   }
 }
 

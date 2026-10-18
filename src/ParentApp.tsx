@@ -172,7 +172,7 @@ export default function ParentApp() {
       settings.soundEffectsEnabled,
       settings.speechEnabled,
       settings.speechRate,
-      settings.speechPitch ?? 1.3,
+      settings.speechPitch ?? 1.0,
       settings.preferredVoiceURI ?? ''
     );
   }, [portal]); // eslint-disable-line react-hooks/exhaustive-deps

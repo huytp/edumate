@@ -51,7 +51,7 @@ export const Navbar: React.FC<NavbarProps> = ({
       updated.soundEffectsEnabled,
       updated.speechEnabled,
       updated.speechRate,
-      updated.speechPitch ?? 1.30,
+      updated.speechPitch ?? 1.0,
       updated.preferredVoiceURI ?? ''
     );
     if (updated.soundEffectsEnabled) {

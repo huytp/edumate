@@ -1,4 +1,4 @@
-import React, { useRef, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import {
   AlertTriangle,
   Code,
@@ -28,6 +28,16 @@ export const SettingsView: React.FC<SettingsViewProps> = ({
   const [formData, setFormData] = useState<AppSettings>(settings);
   const [isSaved, setIsSaved] = useState(false);
   const logoUploadRef = useRef<HTMLInputElement>(null);
+  const [femaleVoices, setFemaleVoices] = useState(() => soundManager.getAvailableFemaleVoices());
+
+  // Browsers load voices asynchronously; refresh the list once they are ready
+  useEffect(() => {
+    if (typeof window === 'undefined' || !('speechSynthesis' in window)) return;
+    const update = () => setFemaleVoices(soundManager.getAvailableFemaleVoices());
+    update();
+    window.speechSynthesis.addEventListener('voiceschanged', update);
+    return () => window.speechSynthesis.removeEventListener('voiceschanged', update);
+  }, []);
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -36,7 +46,7 @@ export const SettingsView: React.FC<SettingsViewProps> = ({
       formData.soundEffectsEnabled,
       formData.speechEnabled,
       formData.speechRate,
-      formData.speechPitch ?? 1.30,
+      formData.speechPitch ?? 1.0,
       formData.preferredVoiceURI ?? ''
     );
     soundManager.playSuccess();
@@ -47,8 +57,7 @@ export const SettingsView: React.FC<SettingsViewProps> = ({
   // Test Voice Synthesis
   const handleTestSpeech = () => {
     soundManager.speak(
-      `Xin chào các em học sinh lớp ${formData.className} trường ${formData.schoolName}! Chúc các em học tập vui vẻ!`,
-      formData.speechVoice === 'en' ? 'en-US' : 'vi-VN'
+      `Xin chào các em học sinh lớp ${formData.className} trường ${formData.schoolName}! Chúc các em học tập vui vẻ!`
     );
   };
 
@@ -230,11 +239,11 @@ export const SettingsView: React.FC<SettingsViewProps> = ({
                 3. Âm Thanh & Giọng Đọc Trò Chơi Tương Tác
               </h3>
               <p className="text-[11px] text-slate-500">
-                Thiết lập giọng nữ cô giáo nhẹ nhàng, chuẩn Tiếng Việt & Tiếng Anh, đọc chậm rãi cho học sinh Lớp 1.
+                Giọng nữ tiếng Việt chuẩn (vi-VN), nhẹ nhàng, đọc chậm rãi cho học sinh Lớp 1.
               </p>
             </div>
             <span className="rounded-full bg-pink-100 text-pink-700 px-2.5 py-0.5 text-[10px] font-extrabold flex items-center gap-1">
-              👩‍🏫 100% Giọng Nữ
+              👩‍🏫 100% Giọng Nữ Tiếng Việt
             </span>
           </div>
 
@@ -246,7 +255,7 @@ export const SettingsView: React.FC<SettingsViewProps> = ({
                 Nhân vật giọng đọc: Cô giáo Trợ giảng (Giọng nữ truyền cảm, dịu dàng)
               </span>
               <p className="text-[11px] text-slate-600 mt-0.5">
-                Ứng dụng đã loại bỏ hoàn toàn giọng đọc nam, tự động ưu tiên giọng nữ ngọt ngào, ấm áp như cô giáo trên lớp, đọc câu hỏi và đáp án chậm rãi, dễ nghe.
+                Ứng dụng chỉ dùng giọng nữ tiếng Việt chuẩn, loại bỏ hoàn toàn giọng nam và giọng nước ngoài. Câu hỏi, đáp án, lời khen và lời động viên đều được đọc bằng tiếng Việt, chậm rãi, dễ nghe.
               </p>
             </div>
           </div>
@@ -282,7 +291,7 @@ export const SettingsView: React.FC<SettingsViewProps> = ({
                   </span>
                 </div>
                 <span className="text-[11px] text-slate-500">
-                  Phát âm nhẹ nhàng, ấm áp; lời chúc trò chơi bằng Tiếng Anh
+                  Phát âm tiếng Việt chuẩn, nhẹ nhàng, ấm áp
                 </span>
               </div>
               <input
@@ -301,7 +310,7 @@ export const SettingsView: React.FC<SettingsViewProps> = ({
             {/* Preferred Voice Select */}
             <div className="space-y-1.5">
               <label className="block text-xs font-bold text-slate-700">
-                Chọn giọng nữ cài đặt trên máy:
+                Chọn giọng nữ tiếng Việt cài đặt trên máy:
               </label>
               <select
                 value={formData.preferredVoiceURI || ''}
@@ -311,16 +320,22 @@ export const SettingsView: React.FC<SettingsViewProps> = ({
                 }}
                 className="w-full rounded-xl border border-slate-300 py-2 px-3 text-xs bg-white focus:border-sky-500 focus:outline-hidden"
               >
-                <option value="">🌸 Tự động chọn giọng nữ tối ưu (Hoài My / Jenny / Samantha)</option>
-                {soundManager.getAvailableFemaleVoices().map((v) => (
+                <option value="">🌸 Tự động chọn giọng nữ tiếng Việt tối ưu (Hoài My / Google Tiếng Việt / Linh)</option>
+                {femaleVoices.map((v) => (
                   <option key={v.voiceURI} value={v.voiceURI}>
                     {v.displayName}
                   </option>
                 ))}
               </select>
-              <span className="text-[11px] text-slate-400 block">
-                Hệ thống chỉ liệt kê giọng nữ đã được kiểm tra an toàn.
-              </span>
+              {femaleVoices.length > 0 ? (
+                <span className="text-[11px] text-slate-400 block">
+                  Hệ thống chỉ liệt kê giọng nữ tiếng Việt (vi-VN) trên máy này.
+                </span>
+              ) : (
+                <span className="text-[11px] text-rose-600 font-semibold block">
+                  Máy này chưa có giọng nữ tiếng Việt nên ứng dụng sẽ không đọc. Hãy dùng Chrome (Google Tiếng Việt), Microsoft Edge (Hoài My) hoặc cài giọng "Linh" trên macOS/iOS.
+                </span>
+              )}
             </div>
 
             {/* Speed Slider */}
@@ -370,20 +385,20 @@ export const SettingsView: React.FC<SettingsViewProps> = ({
 
             <button
               type="button"
-              onClick={() => soundManager.speakEnglishPraise()}
+              onClick={() => soundManager.speakPraise()}
               className="inline-flex items-center gap-1.5 rounded-xl border border-emerald-200 bg-emerald-50 px-3.5 py-2 text-xs font-bold text-emerald-800 hover:bg-emerald-100 transition shadow-2xs"
             >
               <Volume2 className="h-4 w-4 text-emerald-600" />
-              Lời khen ngắn: Good job, Well done, Wonderful
+              Lời khen: Giỏi quá, Tuyệt vời, Con làm tốt lắm
             </button>
 
             <button
               type="button"
-              onClick={() => soundManager.speakEnglishEncouragement()}
+              onClick={() => soundManager.speakEncouragement()}
               className="inline-flex items-center gap-1.5 rounded-xl border border-amber-200 bg-amber-50 px-3.5 py-2 text-xs font-bold text-amber-800 hover:bg-amber-100 transition shadow-2xs"
             >
               <Volume2 className="h-4 w-4 text-amber-600" />
-              Lời động viên: Keep going, Don't worry, Nice try
+              Lời động viên: Cố lên nào, Con thử lại nhé
             </button>
           </div>
         </div>
