@@ -145,7 +145,7 @@ export const InteractiveGamesView: React.FC<InteractiveGamesViewProps> = ({
     setScore(0);
     setGameFinished(false);
     soundManager.playSuccess();
-    soundManager.speakSlowly('Chào các con! Chúng mình cùng chơi nhé!');
+    soundManager.speak("Welcome students! Let's play!", 'en-US');
 
     const updated = games.map((g) =>
       g.id === game.id ? { ...g, playCount: g.playCount + 1 } : g
@@ -166,10 +166,10 @@ export const InteractiveGamesView: React.FC<InteractiveGamesViewProps> = ({
       setScore((prev) => prev + 1);
       soundManager.playSuccess();
       confetti({ particleCount: 45, spread: 55, origin: { y: 0.7 } });
-      soundManager.speakPraise();
+      soundManager.speakEnglishPraise();
     } else {
       soundManager.playTick();
-      soundManager.speakEncouragement();
+      soundManager.speakEnglishEncouragement();
     }
   };
 
@@ -187,7 +187,7 @@ export const InteractiveGamesView: React.FC<InteractiveGamesViewProps> = ({
       confetti({ particleCount: 100, spread: 80 });
       soundManager.playFanfare();
       soundManager.playApplause();
-      soundManager.speakCelebration();
+      soundManager.speakEnglishCelebration();
     }
   };
 
@@ -210,9 +210,9 @@ export const InteractiveGamesView: React.FC<InteractiveGamesViewProps> = ({
     soundManager.speakSlowly(`Câu hỏi: ${currentQuestion.prompt}`, 'vi-VN');
   };
 
-  // Read the English word with the Vietnamese female voice
+  // Pronounce English word with an English female voice
   const handleSpeakEnglishWord = (word: string) => {
-    soundManager.speakSlowly(word);
+    soundManager.speakSlowly(word, 'en-US');
   };
 
   // Award points to selected contestant from game
@@ -706,12 +706,12 @@ export const InteractiveGamesView: React.FC<InteractiveGamesViewProps> = ({
               <div className="flex flex-wrap justify-center gap-2 pt-2">
                 <button
                   type="button"
-                  onClick={() => soundManager.speakCelebration()}
+                  onClick={() => soundManager.speakEnglishCelebration()}
                   className="inline-flex items-center gap-1.5 rounded-xl border border-sky-300 bg-sky-50 px-3.5 py-2 text-xs font-bold text-sky-700 hover:bg-sky-100 transition"
-                  title="Nghe lời chúc mừng"
+                  title="Nghe lời chúc mừng bằng Tiếng Anh"
                 >
                   <Volume2 className="h-4 w-4 text-sky-600" />
-                  Nghe lời chúc
+                  Lời chúc (English)
                 </button>
                 <button
                   onClick={() => handleLaunchGame(activeGame)}

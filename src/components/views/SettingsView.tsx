@@ -239,11 +239,11 @@ export const SettingsView: React.FC<SettingsViewProps> = ({
                 3. Âm Thanh & Giọng Đọc Trò Chơi Tương Tác
               </h3>
               <p className="text-[11px] text-slate-500">
-                Giọng nữ tiếng Việt chuẩn (vi-VN), nhẹ nhàng, đọc chậm rãi cho học sinh Lớp 1.
+                Giọng nữ cô giáo nhẹ nhàng, chuẩn Tiếng Việt & Tiếng Anh, đọc chậm rãi cho học sinh Lớp 1.
               </p>
             </div>
             <span className="rounded-full bg-pink-100 text-pink-700 px-2.5 py-0.5 text-[10px] font-extrabold flex items-center gap-1">
-              👩‍🏫 100% Giọng Nữ Tiếng Việt
+              👩‍🏫 100% Giọng Nữ
             </span>
           </div>
 
@@ -255,7 +255,7 @@ export const SettingsView: React.FC<SettingsViewProps> = ({
                 Nhân vật giọng đọc: Cô giáo Trợ giảng (Giọng nữ truyền cảm, dịu dàng)
               </span>
               <p className="text-[11px] text-slate-600 mt-0.5">
-                Ứng dụng chỉ dùng giọng nữ tiếng Việt chuẩn, loại bỏ hoàn toàn giọng nam và giọng nước ngoài. Câu hỏi, đáp án, lời khen và lời động viên đều được đọc bằng tiếng Việt, chậm rãi, dễ nghe.
+                Ứng dụng chỉ dùng giọng nữ, loại bỏ hoàn toàn giọng nam. Câu hỏi và đáp án đọc bằng giọng nữ tiếng Việt chuẩn; lời khen, lời động viên và lời chúc trò chơi đọc bằng giọng nữ Tiếng Anh, chậm rãi, dễ nghe.
               </p>
             </div>
           </div>
@@ -291,7 +291,7 @@ export const SettingsView: React.FC<SettingsViewProps> = ({
                   </span>
                 </div>
                 <span className="text-[11px] text-slate-500">
-                  Phát âm tiếng Việt chuẩn, nhẹ nhàng, ấm áp
+                  Phát âm nhẹ nhàng, ấm áp; lời chúc trò chơi bằng Tiếng Anh
                 </span>
               </div>
               <input
@@ -385,20 +385,20 @@ export const SettingsView: React.FC<SettingsViewProps> = ({
 
             <button
               type="button"
-              onClick={() => soundManager.speakPraise()}
+              onClick={() => soundManager.speakEnglishPraise()}
               className="inline-flex items-center gap-1.5 rounded-xl border border-emerald-200 bg-emerald-50 px-3.5 py-2 text-xs font-bold text-emerald-800 hover:bg-emerald-100 transition shadow-2xs"
             >
               <Volume2 className="h-4 w-4 text-emerald-600" />
-              Lời khen: Giỏi quá, Tuyệt vời, Con làm tốt lắm
+              Lời khen ngắn: Good job, Well done, Wonderful
             </button>
 
             <button
               type="button"
-              onClick={() => soundManager.speakEncouragement()}
+              onClick={() => soundManager.speakEnglishEncouragement()}
               className="inline-flex items-center gap-1.5 rounded-xl border border-amber-200 bg-amber-50 px-3.5 py-2 text-xs font-bold text-amber-800 hover:bg-amber-100 transition shadow-2xs"
             >
               <Volume2 className="h-4 w-4 text-amber-600" />
-              Lời động viên: Cố lên nào, Con thử lại nhé
+              Lời động viên: Keep going, Don't worry, Nice try
             </button>
           </div>
         </div>

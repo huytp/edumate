@@ -245,6 +245,7 @@ class SoundManager {
       'fred',
       'male',
       'guy',
+      'google us english', // Chrome desktop "Google US English" is a male voice
     ];
 
     return maleTokens.some((token) => sanitized.includes(token));
@@ -271,6 +272,26 @@ class SoundManager {
     const rank = (v: SpeechSynthesisVoice) =>
       (this.isConfirmedVietnameseFemale(v) ? 0 : 2) + (/natural|online/i.test(v.name) ? 0 : 1);
     return voices.sort((a, b) => rank(a) - rank(b));
+  }
+
+  // Known English female voices: Edge/Windows Jenny, Aria, Zira; Chrome UK Female; macOS/iOS Samantha, Victoria, Karen
+  private isConfirmedEnglishFemale(voice: SpeechSynthesisVoice): boolean {
+    const n = voice.name.toLowerCase();
+    return ['jenny', 'aria', 'zira', 'samantha', 'victoria', 'karen', 'moira', 'tessa', 'ava', 'female'].some((kw) =>
+      n.includes(kw)
+    );
+  }
+
+  // English female voices only, used for short praises and English words in games
+  private findEnglishFemaleVoice(): SpeechSynthesisVoice | null {
+    const voices = this.refreshVoices().filter(
+      (v) => v.lang.toLowerCase().replace('_', '-').startsWith('en') && !this.isMaleVoice(v)
+    );
+    const rank = (v: SpeechSynthesisVoice) =>
+      (this.isConfirmedEnglishFemale(v) ? 0 : 4) +
+      (v.lang.toLowerCase().replace('_', '-') === 'en-us' ? 0 : 2) +
+      (/natural|online/i.test(v.name) ? 0 : 1);
+    return voices.sort((a, b) => rank(a) - rank(b))[0] ?? null;
   }
 
   /**
@@ -311,16 +332,22 @@ class SoundManager {
   }
 
   /**
-   * Web Speech API Voice Reading — always a Vietnamese female voice (vi-VN),
-   * slow and calm for Grade 1 pupils. Natural pitch keeps Vietnamese tones accurate.
-   * If the device has no Vietnamese female voice, nothing is spoken (never a male/foreign voice).
+   * Web Speech API Voice Reading — always a female voice of the requested language
+   * (vi-VN by default, en-US for English praises/words), slow and calm for Grade 1 pupils.
+   * Natural pitch keeps Vietnamese tones accurate.
+   * If the device has no female voice for that language, nothing is spoken (never a male voice).
    */
-  public speak(text: string, lang: 'vi-VN' = 'vi-VN', customPitch?: number, customRate?: number) {
+  public speak(
+    text: string,
+    lang: 'vi-VN' | 'en-US' = 'vi-VN',
+    customPitch?: number,
+    customRate?: number
+  ) {
     if (!this.speechEnabled || typeof window === 'undefined' || !('speechSynthesis' in window)) {
       return;
     }
     try {
-      const femaleVoice = this.findFemaleVoice();
+      const femaleVoice = lang === 'en-US' ? this.findEnglishFemaleVoice() : this.findFemaleVoice();
       if (!femaleVoice) return;
 
       window.speechSynthesis.cancel();
@@ -350,12 +377,12 @@ class SoundManager {
   }
 
   // Slow, clear reading tailored specifically for Grade 1 elementary pupils
-  public speakSlowly(text: string, lang: 'vi-VN' = 'vi-VN') {
+  public speakSlowly(text: string, lang: 'vi-VN' | 'en-US' = 'vi-VN') {
     this.speak(text, lang, undefined, 0.70);
   }
 
   // Read full question and its multiple-choice options with natural teacher pauses
-  public speakQuestionAndOptions(prompt: string, options: string[], lang: 'vi-VN' = 'vi-VN') {
+  public speakQuestionAndOptions(prompt: string, options: string[], lang: 'vi-VN' | 'en-US' = 'vi-VN') {
     const letters = ['A', 'B', 'C', 'D', 'E'];
     const optionTexts = options
       .map((opt, i) => `Đáp án ${letters[i] || i + 1}: ${opt}.`)
@@ -364,41 +391,31 @@ class SoundManager {
     this.speakSlowly(fullText, lang);
   }
 
-  private speakRandom(lines: string[]) {
-    this.speak(lines[Math.floor(Math.random() * lines.length)], 'vi-VN', undefined, 0.72);
+  private speakRandom(lines: string[], lang: 'vi-VN' | 'en-US' = 'vi-VN') {
+    this.speak(lines[Math.floor(Math.random() * lines.length)], lang, undefined, 0.72);
   }
 
-  // Short Vietnamese praises for Grade 1 pupils
-  public speakPraise() {
-    this.speakRandom([
-      'Giỏi quá!',
-      'Con làm tốt lắm!',
-      'Tuyệt vời!',
-      'Đúng rồi, giỏi lắm!',
-      'Hoan hô con!',
-      'Xuất sắc quá!',
-    ]);
+  // Short, clear English praises for Grade 1 pupils
+  public speakEnglishPraise() {
+    this.speakRandom(['Good job!', 'Well done!', 'Wonderful!', 'Great job!', 'Super star!', 'Excellent!'], 'en-US');
   }
 
-  // Short, caring Vietnamese encouragements for Grade 1 pupils
-  public speakEncouragement() {
-    this.speakRandom([
-      'Cố lên nào!',
-      'Không sao đâu con!',
-      'Con thử lại nhé!',
-      'Gần đúng rồi, cố lên!',
-      'Con làm được mà!',
-    ]);
+  // Short, caring English encouragements for Grade 1 pupils
+  public speakEnglishEncouragement() {
+    this.speakRandom(['Keep going!', "Don't worry!", 'Nice try!', 'Try again!', 'You can do it!'], 'en-US');
   }
 
-  // Short, joyful Vietnamese game-finish celebration
-  public speakCelebration() {
-    this.speakRandom([
-      'Tuyệt vời! Cả lớp giỏi quá!',
-      'Hoan hô! Các con đã hoàn thành rồi!',
-      'Chúc mừng các con! Giỏi lắm!',
-      'Cả lớp mình làm tốt lắm!',
-    ]);
+  // Short, joyful English game-finish celebration
+  public speakEnglishCelebration() {
+    this.speakRandom(
+      [
+        'Wonderful! Good job everyone!',
+        'Well done! You did it!',
+        'Super star! Great job!',
+        'Congratulations! Good job!',
+      ],
+      'en-US'
+    );
   }
 }
 
